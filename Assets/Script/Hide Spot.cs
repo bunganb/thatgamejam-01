@@ -21,7 +21,7 @@ public class HideSpot : MonoBehaviour, IInteractable
         if (!isHiding)
         {
             currentPlayer = null;
-            Debug.Log("Keluar area HideSpot");
+            
         }
         icon.SetActive(false);
     }
@@ -45,7 +45,7 @@ public class HideSpot : MonoBehaviour, IInteractable
         player.GetComponent<PlayerMovement>().enabled = false;
         icon.SetActive(false);
         isHiding = true;
-        Debug.Log("Player bersembunyi");
+        
     }
     private void unhide(GameObject player)
     {
@@ -55,6 +55,6 @@ public class HideSpot : MonoBehaviour, IInteractable
         player.GetComponent<PlayerMovement>().enabled = true;
         isHiding = false;
         icon.SetActive(true);
-        Debug.Log("Player keluar dari persembunyian");
+        
     }
 } 
