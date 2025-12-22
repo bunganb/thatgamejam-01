@@ -1,54 +1,70 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class PlayerInteraction : MonoBehaviour
 {
+    private readonly List<IInteractable> interactables = new();
     private IInteractable current;
-    private void Update()
-    {
-        if(current == null) return;
 
-        if(IsPressed(current.InteractionKey))
+    void Update()
+    {
+        if (current == null) return;
+
+        if (IsPressed(current.InteractionKey))
         {
             current.Interact(gameObject);
         }
     }
+
     private bool IsPressed(InteractionKey key)
     {
-        var keyboard = Keyboard.current;
-        if (keyboard == null) return false;
+        var kb = Keyboard.current;
+        if (kb == null) return false;
 
-        switch (key)
+        return key switch
         {
-            case InteractionKey.E:
-                return keyboard.eKey.wasPressedThisFrame;
-
-            case InteractionKey.F:
-                return keyboard.fKey.wasPressedThisFrame;
-
-            case InteractionKey.Space:
-                return keyboard.spaceKey.wasPressedThisFrame;
-
-            case InteractionKey.Q:
-                return keyboard.qKey.wasPressedThisFrame;
-        }
-        return false;
+            InteractionKey.E => kb.eKey.wasPressedThisFrame,
+            InteractionKey.F => kb.fKey.wasPressedThisFrame,
+            InteractionKey.Space => kb.spaceKey.wasPressedThisFrame,
+            InteractionKey.Q => kb.qKey.wasPressedThisFrame,
+            _ => false
+        };
     }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.TryGetComponent(out IInteractable interactable))
         {
-            current = interactable;
-            current.OnEnter(gameObject);
+            if (!interactables.Contains(interactable))
+                interactables.Add(interactable);
+
+            UpdateCurrent();
         }
     }
+
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.TryGetComponent(out IInteractable interactable))
         {
-            current.OnExit(gameObject);
-            current = null;
+            if (interactables.Contains(interactable))
+            {
+                interactable.OnExit(gameObject);
+                interactables.Remove(interactable);
+                UpdateCurrent();
+            }
         }
+    }
+
+    private void UpdateCurrent()
+    {
+        // Matikan UI semua
+        foreach (var i in interactables)
+            i.OnEnter(gameObject); // aman karena tiap objek handle sendiri
+
+        // Pilih prioritas tertinggi (sementara: yang terakhir masuk)
+        current = interactables.Count > 0
+            ? interactables[^1]
+            : null;
     }
 }
