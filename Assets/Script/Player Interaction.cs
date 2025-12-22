@@ -19,25 +19,33 @@ public class PlayerInteraction : MonoBehaviour
         var keyboard = Keyboard.current;
         if (keyboard == null) return false;
 
-        return key switch
+        switch (key)
         {
-            InteractionKey.E => keyboard.eKey.wasPressedThisFrame,
-            InteractionKey.F => keyboard.fKey.wasPressedThisFrame,
-            InteractionKey.Space => keyboard.spaceKey.wasPressedThisFrame,
-            _ => false,
-        };
+            case InteractionKey.E:
+                return keyboard.eKey.wasPressedThisFrame;
+
+            case InteractionKey.F:
+                return keyboard.fKey.wasPressedThisFrame;
+
+            case InteractionKey.Space:
+                return keyboard.spaceKey.wasPressedThisFrame;
+
+            case InteractionKey.Q:
+                return keyboard.qKey.wasPressedThisFrame;
+        }
+        return false;
     }
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.TryGetComponent<IInteractable>(out var interactable))
+        if (other.TryGetComponent(out IInteractable interactable))
         {
             current = interactable;
             current.OnEnter(gameObject);
         }
     }
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        if(other.TryGetComponent<IInteractable>(out var interactable))
+        if (other.TryGetComponent(out IInteractable interactable))
         {
             current.OnExit(gameObject);
             current = null;
