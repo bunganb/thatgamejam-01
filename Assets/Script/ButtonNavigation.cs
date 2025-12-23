@@ -9,7 +9,8 @@ public class ButtonNavigation : MonoBehaviour
         Quit,
         Pause,
         InGame,
-        Credits
+        Credits,
+        Back
     }
     public  ButtonTargets ButtonTarget;
 
@@ -24,6 +25,21 @@ public class ButtonNavigation : MonoBehaviour
         switch (ButtonTarget)
         {
             case ButtonTargets.MainMenu:
+                UIManager.Instance.GoToMainMenu();
+                break;
+            case ButtonTargets.Credits:
+                UIManager.Instance.GoToCredits();
+                break;
+            case ButtonTargets.InGame:
+                UIManager.Instance.GoToGame();
+                break;
+            case ButtonTargets.Settings:
+                UIManager.Instance.GoToSettings();
+                break;
+            case ButtonTargets.Quit:
+                Application.Quit();
+                break;
+            case ButtonTargets.Back:
                 UIManager.Instance.GoToMainMenu();
                 break;
         }

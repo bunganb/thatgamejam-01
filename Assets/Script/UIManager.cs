@@ -1,10 +1,19 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
-
+    [Header("Panels")]
+    public GameObject MainMenuPanel;
+    public GameObject SettingsPanel;
+    public GameObject CreditsPanel;
+    public GameObject InGamePanel;
+    //history panel
+    private Stack<GameObject> uiHistory = new Stack<GameObject>();
+    private GameObject currentPanel;
     private void Awake()
     {
         if (Instance == null)
@@ -20,27 +29,72 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        
+        currentPanel = MainMenuPanel;
+        MainMenuPanel.SetActive(true);
+
+        SettingsPanel.SetActive(false);
+        CreditsPanel.SetActive(false);
+        InGamePanel.SetActive(false);
     }
+    private void SwitchTo(GameObject targetPanel, bool recordHistory = true)
+    {
+        if (currentPanel == targetPanel) return;
+
+        if (currentPanel != null)
+        {
+            if (recordHistory)
+                uiHistory.Push(currentPanel);
+
+            currentPanel.SetActive(false);
+        }
+
+        targetPanel.SetActive(true);
+        currentPanel = targetPanel;
+    }
+    
 
     public void GoToMainMenu()
+    {
+        uiHistory.Clear();
+        SwitchTo(MainMenuPanel, false);
+        Time.timeScale = 1f;
+    }
+
+    public void BackButton()
     {
         
     }
     public void GoToSettings()
     {
+        SwitchTo(SettingsPanel);
     }
+    
     public  void GoToGame()
     {
+        uiHistory.Clear();
+        SwitchTo(InGamePanel, false);
+        Time.timeScale = 1f;
     }
 
     public void GoToCredits()
     {
-        
+       SwitchTo(CreditsPanel);
     }
 
     public void PauseGame()
     {
         
+    }
+    public void GoBack()
+    {
+        if (uiHistory.Count == 0) return;
+
+        currentPanel.SetActive(false);
+        currentPanel = uiHistory.Pop();
+        currentPanel.SetActive(true);
+    }
+    private void Reset()
+    {
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
     }
 }
