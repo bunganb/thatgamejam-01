@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     public GameObject SettingsPanel;
     public GameObject CreditsPanel;
     public GameObject InGamePanel;
+    public GameObject PausePanel;
     //history panel
     private Stack<GameObject> uiHistory = new Stack<GameObject>();
     private GameObject currentPanel;
@@ -35,6 +36,7 @@ public class UIManager : MonoBehaviour
         SettingsPanel.SetActive(false);
         CreditsPanel.SetActive(false);
         InGamePanel.SetActive(false);
+        PausePanel.SetActive(false);
     }
     private void SwitchTo(GameObject targetPanel, bool recordHistory = true)
     {
@@ -56,14 +58,11 @@ public class UIManager : MonoBehaviour
     public void GoToMainMenu()
     {
         uiHistory.Clear();
+        Reset();
         SwitchTo(MainMenuPanel, false);
-        Time.timeScale = 1f;
+        Time.timeScale = 0f;
     }
-
-    public void BackButton()
-    {
-        
-    }
+    
     public void GoToSettings()
     {
         SwitchTo(SettingsPanel);
@@ -83,7 +82,9 @@ public class UIManager : MonoBehaviour
 
     public void PauseGame()
     {
-        
+        uiHistory.Clear();
+        SwitchTo(PausePanel, false);
+        Time.timeScale = 0f;
     }
     public void GoBack()
     {
@@ -96,5 +97,12 @@ public class UIManager : MonoBehaviour
     private void Reset()
     {
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+    }
+
+    public void ResumeGame()
+    {
+        uiHistory.Clear();
+        SwitchTo(InGamePanel, false);
+        Time.timeScale = 1f;
     }
 }
