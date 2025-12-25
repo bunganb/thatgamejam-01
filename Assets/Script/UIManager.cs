@@ -20,7 +20,6 @@ public class UIManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -32,6 +31,7 @@ public class UIManager : MonoBehaviour
     {
         currentPanel = MainMenuPanel;
         MainMenuPanel.SetActive(true);
+        Time.timeScale = 0f;
 
         SettingsPanel.SetActive(false);
         CreditsPanel.SetActive(false);
