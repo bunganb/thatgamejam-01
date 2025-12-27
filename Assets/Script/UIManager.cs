@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,6 +14,13 @@ public class UIManager : MonoBehaviour
     public GameObject CreditsPanel;
     public GameObject InGamePanel;
     public GameObject PausePanel;
+    
+    [Header("Skill Cooldown UI")]
+    [SerializeField] private Image skillCooldownImage;
+    private PlayerSkillController skill;
+    
+    [Header("Buttons")]
+    public GameObject SkillButton;
     //history panel
     private Stack<GameObject> uiHistory = new Stack<GameObject>();
     private GameObject currentPanel;
@@ -37,7 +46,35 @@ public class UIManager : MonoBehaviour
         CreditsPanel.SetActive(false);
         InGamePanel.SetActive(false);
         PausePanel.SetActive(false);
+
+        skill = FindAnyObjectByType<PlayerSkillController>();
+
+        if (skillCooldownImage != null)
+            skillCooldownImage.fillAmount = 0f;
     }
+    private void Update()
+    {
+        HandleSkillKeyboard();
+        UpdateSkillCooldownUI();
+    }
+    private void HandleSkillKeyboard()
+    {
+        if (skill == null) return;
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            BellButtonActivate();
+        }
+    }
+    private void UpdateSkillCooldownUI()
+    {
+        if (skill == null || skillCooldownImage == null)
+            return;
+
+        skillCooldownImage.fillAmount = skill.CooldownProgress;
+    }
+
+
     private void SwitchTo(GameObject targetPanel, bool recordHistory = true)
     {
         if (currentPanel == targetPanel) return;
@@ -105,4 +142,19 @@ public class UIManager : MonoBehaviour
         SwitchTo(InGamePanel, false);
         Time.timeScale = 1f;
     }
+
+    public void BellButtonActivate()
+    {
+        if (skill == null)
+        {
+            Debug.LogError("PlayerSkillController not found");
+            return;
+        }
+
+        if (!skill.TryActivateSkill())
+        {
+            Debug.Log("Skill on cooldown");
+        }
+    }
+
 }

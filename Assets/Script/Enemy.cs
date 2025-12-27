@@ -29,7 +29,7 @@ public class Enemy : MonoBehaviour
     public float catchDistance = 1.2f;
 
     private void Awake()
-    {
+    { 
         Debug.Log($"[{name}] fovPrefab = {(fovPrefab ? fovPrefab.name : "NULL")}");
 
         if (fovVisual == null && fovPrefab != null)
