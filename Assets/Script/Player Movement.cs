@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         ReadInput();
-        //UpdateAnimation();
+        UpdateAnimation();
         FlipSprite();
     }
     private void FixedUpdate()
@@ -50,8 +50,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateAnimation()
     {
-        animator.SetFloat("MoveX", moveInput.x);
-        animator.SetFloat("MoveY", moveInput.y);
+        float animX = Mathf.Abs(moveInput.x);
+        float animY = moveInput.y;
+        animator.SetFloat("MoveX", animX);
+        animator.SetFloat("MoveY", animY);
         animator.SetFloat("Speed", moveInput.sqrMagnitude);
     }
 
