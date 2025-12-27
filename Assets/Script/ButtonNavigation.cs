@@ -11,7 +11,8 @@ public class ButtonNavigation : MonoBehaviour
         InGame,
         Credits,
         Back,
-        Resume
+        Resume,
+        BellButton
     }
     public  ButtonTargets ButtonTarget;
 
@@ -48,6 +49,9 @@ public class ButtonNavigation : MonoBehaviour
                 break;
             case ButtonTargets.Pause:
                 UIManager.Instance.PauseGame();
+                break;
+            case ButtonTargets.BellButton:
+                UIManager.Instance.BellButtonActivate();
                 break;
         }
     }

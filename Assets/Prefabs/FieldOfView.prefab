@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 9159514687809510213}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.99219, y: -0.28653, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -56,9 +56,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FieldOfView2D
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 128
   fov: 90
-  viewDistance: 8
+  viewDistance: 6
   rayCount: 100
   originOffset: {x: 0, y: 0.5, z: 0}
 --- !u!23 &4738591901507975164

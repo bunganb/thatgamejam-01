@@ -26,7 +26,6 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         rb.linearVelocity = moveInput * moveSpeed;
-        Debug.Log(rb.linearVelocity);
     }
 
 
@@ -47,7 +46,6 @@ public class PlayerMovement : MonoBehaviour
             (Keyboard.current.sKey.isPressed ? 1 : 0);
 
         moveInput = new Vector2(x, y).normalized;
-        Debug.Log($"Move Input: {moveInput}");
     }
 
     private void UpdateAnimation()

@@ -1,48 +1,40 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+using System.Collections;
 
 public class PlayerSkillController : MonoBehaviour
 {
     public float cooldown = 5f;
 
     [Header("References")]
-    public DogBarkController dog; // drag di Inspector
+    public DogBarkController dog;
 
-    private bool onCooldown = false;
+    public bool IsOnCooldown { get; private set; }
+    public float CooldownProgress { get; private set; } // 0–1
 
-    private void Update()
+    public bool TryActivateSkill()
     {
-        if (Keyboard.current == null) return;
+        if (IsOnCooldown || dog == null)
+            return false;
 
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            ActivateSkill();
-        }
-    }
-
-    private void ActivateSkill()
-    {
-        if (onCooldown)
-        {
-            Debug.Log("Skill on cooldown");
-            return;
-        }
-
-        if (dog == null)
-        {
-            Debug.LogError("Dog reference not set!");
-            return;
-        }
-
-        Debug.Log("Activating dog bark skill");
         dog.ActiveBark();
         StartCoroutine(CooldownRoutine());
+        return true;
     }
 
-    private System.Collections.IEnumerator CooldownRoutine()
+    private IEnumerator CooldownRoutine()
     {
-        onCooldown = true;
-        yield return new WaitForSeconds(cooldown);
-        onCooldown = false;
+        IsOnCooldown = true;
+        CooldownProgress = 1f;
+
+        float timer = cooldown;
+        while (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            CooldownProgress = timer / cooldown;
+            yield return null;
+        }
+
+        CooldownProgress = 0f;
+        IsOnCooldown = false;
     }
 }
