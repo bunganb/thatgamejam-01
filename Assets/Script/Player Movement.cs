@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
         if (!isAlive) return;
 
         ReadInput();
+        UpdateAnimation();
         FlipSprite();
     }
 
@@ -58,7 +59,15 @@ public class PlayerMovement : MonoBehaviour
 
         moveInput = new Vector2(x, y).normalized;
     }
+    private void UpdateAnimation()
+    {
+        float animX = Mathf.Abs(moveInput.x);
+        float animY = moveInput.y;
 
+        animator.SetFloat("MoveX", animX);
+        animator.SetFloat("MoveY", animY);
+        animator.SetFloat("Speed", moveInput.sqrMagnitude);
+    }
     private void FlipSprite()
     {
         if (moveInput.x < 0)
