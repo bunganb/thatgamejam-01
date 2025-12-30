@@ -253,7 +253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33c59fa465eb7b04c97161b9536e8e5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SequencePuzzleStep
-  interactionKey: 2
+  interactionKey: 0
   controller: {fileID: 1760690935}
   ui: {fileID: 1865948127}
 --- !u!4 &360917722
@@ -2361,6 +2361,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 5
+  isHidden: 0
+  isAlive: 1
 --- !u!50 &1209582610
 Rigidbody2D:
   serializedVersion: 5
@@ -2982,7 +2984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33c59fa465eb7b04c97161b9536e8e5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SequencePuzzleStep
-  interactionKey: 2
+  interactionKey: 0
   controller: {fileID: 1760690935}
   ui: {fileID: 752472952}
 --- !u!4 &1830711086
