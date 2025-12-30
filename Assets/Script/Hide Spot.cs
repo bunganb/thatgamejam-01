@@ -1,60 +1,60 @@
 using UnityEngine;
+
 public class HideSpot : MonoBehaviour, IInteractable
 {
     public InteractionKey InteractionKey => InteractionKey.E;
+
+    [Header("UI")]
     public GameObject icon;
-    private bool isHiding = false;
-    private GameObject currentPlayer;
-    private Rigidbody2D rb;
+
+    private bool isHiding;
+    private PlayerMovement player;
+
     private void Awake()
     {
-        icon.SetActive(false);
+        if (icon != null)
+            icon.SetActive(false);
     }
-    public void OnEnter(GameObject player)
+
+    public void OnEnter(GameObject go)
     {
-        icon.SetActive(true);
-        currentPlayer = player;
-        rb = player.GetComponent<Rigidbody2D>();
+        icon?.SetActive(true);
+        player = go.GetComponent<PlayerMovement>();
     }
-    public void OnExit(GameObject player)
+
+    public void OnExit(GameObject go)
     {
         if (!isHiding)
         {
-            currentPlayer = null;
-            
-        }
-        icon.SetActive(false);
-    }
-    public void Interact(GameObject player)
-    {
-        if (isHiding)
-        {
-            unhide(player);
-        }
-        else
-        {
-            hide(player);
+            player = null;
+            icon?.SetActive(false);
         }
     }
-    private void hide(GameObject player)
+
+    public void Interact(GameObject go)
     {
-        
-        player.GetComponent<SpriteRenderer>().enabled = false;
-        rb.linearVelocity = Vector2.zero;
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        player.GetComponent<PlayerMovement>().enabled = false;
-        icon.SetActive(false);
+        if (player == null) return;
+
+        if (isHiding) Unhide();
+        else Hide();
+    }
+
+    private void Hide()
+    {
         isHiding = true;
-        
+        icon?.SetActive(false);
+
+        player.isHidden = true;
+
+        // efek fisik (opsional)
+        player.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
     }
-    private void unhide(GameObject player)
+
+    private void Unhide()
     {
-       
-        player.GetComponent<SpriteRenderer>().enabled = true;
-        rb.bodyType = RigidbodyType2D.Dynamic;
-        player.GetComponent<PlayerMovement>().enabled = true;
         isHiding = false;
-        icon.SetActive(true);
-        
+        icon?.SetActive(true);
+
+        player.isHidden = false;
     }
-} 
+}

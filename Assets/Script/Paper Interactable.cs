@@ -52,6 +52,7 @@ public class PaperInteractable : MonoBehaviour, IInteractable
         isReading = true;
         paperUI.SetActive(false);
         playerMovement.enabled = false;
+        Time.timeScale = 0;
         Debug.Log("Membuka panel kertas");
     }
     private void ClosePanel()
@@ -60,6 +61,7 @@ public class PaperInteractable : MonoBehaviour, IInteractable
         isReading = false;
         paperUI.SetActive(true);
         playerMovement.enabled = true;
+        Time.timeScale = 1;
         Debug.Log("Menutup panel kertas");
     }
     private void Update()
