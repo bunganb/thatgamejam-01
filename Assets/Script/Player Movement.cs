@@ -5,6 +5,10 @@ public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
 
+    [Header("Gameplay State")]
+    public bool isHidden;
+    public bool isAlive = true;
+
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
@@ -19,15 +23,22 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!isAlive) return;
+
         ReadInput();
-        //UpdateAnimation();
         FlipSprite();
     }
+
     private void FixedUpdate()
     {
+        if (!isAlive || isHidden)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
         rb.linearVelocity = moveInput * moveSpeed;
     }
-
 
     private void ReadInput()
     {
@@ -40,19 +51,12 @@ public class PlayerMovement : MonoBehaviour
         float x =
             (Keyboard.current.dKey.isPressed ? 1 : 0) -
             (Keyboard.current.aKey.isPressed ? 1 : 0);
-        
+
         float y =
             (Keyboard.current.wKey.isPressed ? 1 : 0) -
             (Keyboard.current.sKey.isPressed ? 1 : 0);
 
         moveInput = new Vector2(x, y).normalized;
-    }
-
-    private void UpdateAnimation()
-    {
-        animator.SetFloat("MoveX", moveInput.x);
-        animator.SetFloat("MoveY", moveInput.y);
-        animator.SetFloat("Speed", moveInput.sqrMagnitude);
     }
 
     private void FlipSprite()
