@@ -14,8 +14,13 @@ public class DogBarkController : MonoBehaviour
     public void ActiveBark()
     {
         if (isBarking) return;
+
+        // emit suara anjing
+        NoiseSystem.Emit(new NoiseInfo(NoiseType.DogBark, transform.position, 10f));
+
         StartCoroutine(BarkRoutine());
     }
+
 
     private IEnumerator BarkRoutine()
     {
