@@ -4588,7 +4588,7 @@ MonoBehaviour:
   patrolPoints:
   - {fileID: 1867970368}
   - {fileID: 2023502221}
-  moveSpeed: 9
+  moveSpeed: 10
   waitTime: 1.5
   rotationSpeed: 90
   viewDistance: 6
@@ -4601,6 +4601,10 @@ MonoBehaviour:
   investigateStopDistance: 0.15
   investigateWaitTime: 1.2
   barkBlockWindow: 0.35
+  usePathfinding: 1
+  investigateOffset: 1.5
+  chasePathUpdateInterval: 0.5
+  catchDistance: 0.5
   alertDuration: 2
   alertRotationSpeed: 45
 --- !u!50 &1105029136
@@ -8530,6 +8534,52 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1853863915
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1853863917}
+  - component: {fileID: 1853863916}
+  m_Layer: 0
+  m_Name: GridPathFinding
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1853863916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853863915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c77bd1fe427ffa4282736184ae3fdea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridPathfinding
+  obstacleTilemap: {fileID: 1712239363}
+  maxIterations: 1000
+--- !u!4 &1853863917
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853863915}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.09578, y: 1.75453, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1867970367
 GameObject:
   m_ObjectHideFlags: 0
@@ -9606,3 +9656,4 @@ SceneRoots:
   - {fileID: 1105029134}
   - {fileID: 800293366}
   - {fileID: 2029416736}
+  - {fileID: 1853863917}
