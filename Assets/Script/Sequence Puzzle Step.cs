@@ -33,11 +33,15 @@ public class SequencePuzzleStep : MonoBehaviour, IInteractable
     private void Active()
     {
         isActive = true;
-        if (ui != null)
-            ui.SetActive(false);
+        if (ui != null) ui.SetActive(false);
+
         controller.NotifyActived(this);
         Debug.Log("Step Activated");
+
+        // suara puzzle (tanpa anjing)
+        NoiseSystem.Emit(new NoiseInfo(NoiseType.Puzzle, transform.position, 8f));
     }
+
     public void ResetStep()
     {
         isActive = false;
