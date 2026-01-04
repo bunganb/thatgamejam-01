@@ -19,6 +19,8 @@ public class Enemy : MonoBehaviour
     public float moveSpeed = 2f;
     public float waitTime = 1.5f;
     public float rotationSpeed = 90f; // Rotation speed untuk Waiting state
+    [Tooltip("Gunakan pathfinding untuk patrol movement?")]
+    public bool usePathfindingForPatrol = true;
 
     private int patrolIndex;
     private float stateTimer;
@@ -63,6 +65,7 @@ public class Enemy : MonoBehaviour
     
     private float lastChasePathUpdate;
     private float losePlayerTimer; // Timer saat player hilang dari pandangan
+    
     [Header("Alert Settings")]
     public float alertDuration = 2f;
     public float alertRotationSpeed = 45f;
@@ -290,9 +293,100 @@ public class Enemy : MonoBehaviour
         if (patrolPoints == null || patrolPoints.Length == 0) return;
 
         Vector2 targetPos = patrolPoints[patrolIndex].position;
-        
+        Vector2 currentPos = transform.position;
+
+        // Gunakan pathfinding untuk patrol jika enabled
+        if (usePathfindingForPatrol && usePathfinding && GridPathfinding.Instance != null)
+        {
+            // Generate path ke patrol point jika belum ada
+            if (currentPath == null || currentPath.Count == 0 || !isReturningToPatrol)
+            {
+                // Check jika ini first time atau baru ganti target patrol point
+                bool needNewPath = currentPath == null || currentPath.Count == 0;
+                
+                // Atau jika path yang ada bukan menuju patrol point saat ini
+                if (currentPath != null && currentPath.Count > 0)
+                {
+                    Vector2 pathEnd = currentPath[currentPath.Count - 1];
+                    float distToTarget = Vector2.Distance(pathEnd, targetPos);
+                    if (distToTarget > 0.5f)
+                    {
+                        needNewPath = true;
+                    }
+                }
+
+                if (needNewPath)
+                {
+                    currentPath = GridPathfinding.Instance.FindPath(currentPos, targetPos);
+                    currentPathIndex = 0;
+                    isReturningToPatrol = false;
+
+                    if (currentPath != null && currentPath.Count > 0)
+                    {
+                        if (Time.frameCount % 60 == 0)
+                        {
+                            Debug.Log($"[Enemy] Patrol path to point {patrolIndex}: {currentPath.Count} waypoints");
+                        }
+                        GridPathfinding.Instance.SetDebugPath(currentPath);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[Enemy] Failed to generate patrol path to point {patrolIndex}, using direct movement");
+                        currentPath = null;
+                    }
+                }
+            }
+
+            // Follow path jika ada
+            if (currentPath != null && currentPath.Count > 0)
+            {
+                if (currentPathIndex < currentPath.Count)
+                {
+                    Vector2 targetWaypoint = currentPath[currentPathIndex];
+                    float distanceToWaypoint = Vector2.Distance(currentPos, targetWaypoint);
+
+                    if (distanceToWaypoint <= 0.3f)
+                    {
+                        currentPathIndex++;
+                    }
+                    else
+                    {
+                        Vector2 direction = (targetWaypoint - currentPos).normalized;
+                        if (direction.sqrMagnitude > 0.01f)
+                        {
+                            FaceDirection(direction);
+                        }
+                        MoveTowards(targetWaypoint);
+                    }
+                }
+                
+                // Check apakah sudah sampai di patrol point
+                float distToPatrolPoint = Vector2.Distance(currentPos, targetPos);
+                if (distToPatrolPoint < 0.2f)
+                {
+                    Debug.Log($"[Enemy] Reached patrol point {patrolIndex}");
+                    patrolIndex = (patrolIndex + 1) % patrolPoints.Length;
+                    currentPath = null; // Clear path untuk generate baru ke next point
+                    ChangeState(State.Waiting);
+                }
+            }
+            else
+            {
+                // Fallback ke direct movement jika path gagal
+                DirectPatrolMovement(targetPos, currentPos);
+            }
+        }
+        else
+        {
+            // Direct patrol movement (tanpa pathfinding)
+            DirectPatrolMovement(targetPos, currentPos);
+        }
+    }
+
+    private void DirectPatrolMovement(Vector2 targetPos, Vector2 currentPos)
+    {
         // Hadapkan ke target sebelum bergerak
-        Vector2 direction = (targetPos - (Vector2)transform.position).normalized;
+        Vector2 direction = (targetPos - currentPos).normalized;
         if (direction.sqrMagnitude > 0.01f)
         {
             FaceDirection(direction);
@@ -300,7 +394,7 @@ public class Enemy : MonoBehaviour
         
         MoveTowards(targetPos);
 
-        if (Vector2.Distance(transform.position, targetPos) < 0.1f)
+        if (Vector2.Distance(currentPos, targetPos) < 0.1f)
         {
             patrolIndex = (patrolIndex + 1) % patrolPoints.Length;
             ChangeState(State.Waiting);
@@ -853,6 +947,34 @@ public class Enemy : MonoBehaviour
                 {
                     Gizmos.DrawLine(patrolPoints[i].position, patrolPoints[next].position);
                 }
+            }
+        }
+
+        // Draw current patrol path (pathfinding)
+        if (state == State.Patrol)
+        {
+            if (currentPath != null && currentPath.Count > 0)
+            {
+                // Cyan path untuk patrol dengan pathfinding
+                Gizmos.color = Color.cyan;
+                for (int i = 0; i < currentPath.Count - 1; i++)
+                {
+                    Gizmos.DrawLine(currentPath[i], currentPath[i + 1]);
+                }
+                
+                // Current waypoint
+                if (currentPathIndex < currentPath.Count)
+                {
+                    Gizmos.color = Color.white;
+                    Gizmos.DrawWireSphere(currentPath[currentPathIndex], 0.15f);
+                }
+            }
+            
+            // Draw target patrol point
+            if (patrolPoints != null && patrolIndex < patrolPoints.Length)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(patrolPoints[patrolIndex].position, 0.25f);
             }
         }
 
