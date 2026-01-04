@@ -12,9 +12,15 @@ public class FieldOfView2D : MonoBehaviour
     [Header("Origin (local offset)")]
     [SerializeField] private Vector3 originOffset = new Vector3(0f, 0.5f, 0f);
 
+    [Header("Rendering")]
+    [SerializeField] private string sortingLayerName = "Default";
+    [SerializeField] private int sortingOrder = 10; // Tinggi agar di atas tilemap
+    [SerializeField] private Color fovColor = new Color(1f, 1f, 0f, 0.2f); // Kuning transparan
+
     private Mesh mesh;
     private Vector3 originWorld;
     private float startingAngle;
+    private MeshRenderer meshRenderer;
 
     private void Awake()
     {
@@ -22,14 +28,19 @@ public class FieldOfView2D : MonoBehaviour
         mesh.name = "FOV Mesh";
         GetComponent<MeshFilter>().mesh = mesh;
 
-        // Biar aman: kalau belum ada material, kasih default sederhana
-        var mr = GetComponent<MeshRenderer>();
-        if (mr.sharedMaterial == null)
-        {
-            // shader ini biasanya ada di Unity built-in
-            mr.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
-            mr.sharedMaterial.color = new Color(1f, 1f, 1f, 0.25f); // putih transparan
-        }
+        // Setup MeshRenderer
+        meshRenderer = GetComponent<MeshRenderer>();
+        
+        // Buat material baru dengan shader yang support transparency
+        Material fovMaterial = new Material(Shader.Find("Sprites/Default"));
+        fovMaterial.color = fovColor;
+        meshRenderer.sharedMaterial = fovMaterial;
+        
+        // PENTING: Set sorting layer dan order
+        meshRenderer.sortingLayerName = sortingLayerName;
+        meshRenderer.sortingOrder = sortingOrder;
+        
+        Debug.Log($"[FOV] Sorting Layer: {sortingLayerName}, Order: {sortingOrder}");
     }
 
     private void LateUpdate()
@@ -88,6 +99,26 @@ public class FieldOfView2D : MonoBehaviour
     public void SetFoV(float newFov) => fov = newFov;
     public void SetViewDistance(float dist) => viewDistance = dist;
 
+    // Method untuk update color dari luar (opsional)
+    public void SetColor(Color color)
+    {
+        fovColor = color;
+        if (meshRenderer != null && meshRenderer.sharedMaterial != null)
+        {
+            meshRenderer.sharedMaterial.color = color;
+        }
+    }
+
+    // Method untuk update sorting order dari luar (opsional)
+    public void SetSortingOrder(int order)
+    {
+        sortingOrder = order;
+        if (meshRenderer != null)
+        {
+            meshRenderer.sortingOrder = order;
+        }
+    }
+
     // ===== Helpers =====
     private static Vector3 GetVectorFromAngle(float angleDegrees)
     {
@@ -101,5 +132,17 @@ public class FieldOfView2D : MonoBehaviour
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         if (angle < 0) angle += 360f;
         return angle;
+    }
+
+    // Debug visualization
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying) return;
+
+        // Draw FOV direction
+        Gizmos.color = Color.yellow;
+        Vector3 origin = transform.position + originOffset;
+        Vector3 aimDir = GetVectorFromAngle(startingAngle - fov / 2f);
+        Gizmos.DrawRay(origin, aimDir * viewDistance);
     }
 }

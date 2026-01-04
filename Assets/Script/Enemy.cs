@@ -56,8 +56,13 @@ public class Enemy : MonoBehaviour
     public float chasePathUpdateInterval = 0.5f;
     [Tooltip("Jarak untuk consider player tertangkap")]
     public float catchDistance = 0.5f;
+    [Tooltip("Jarak maksimal chase (jika player lebih jauh, enemy return to patrol)")]
+    public float maxChaseDistance = 20f;
+    [Tooltip("Waktu tunggu setelah player hilang dari view sebelum return (detik)")]
+    public float losePlayerTimeout = 2f;
     
     private float lastChasePathUpdate;
+    private float losePlayerTimer; // Timer saat player hilang dari pandangan
     [Header("Alert Settings")]
     public float alertDuration = 2f;
     public float alertRotationSpeed = 45f;
@@ -275,6 +280,7 @@ public class Enemy : MonoBehaviour
                 Debug.Log($"[Enemy] Chasing player!");
                 isReturningToPatrol = false;
                 lastChasePathUpdate = 0f; // Reset timer untuk immediate path generation
+                losePlayerTimer = 0f; // Reset lose player timer
                 break;
         }
     }
@@ -490,13 +496,42 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        // Check apakah player sembunyi dan tidak terlihat
-        if (player.isHidden && !CanSeePlayer())
+        // Check apakah player terlalu jauh (melebihi max chase distance)
+        if (distanceToPlayer > maxChaseDistance)
         {
-            Debug.Log("[Enemy] Player hidden and out of sight, returning to patrol");
+            Debug.Log($"[Enemy] Player too far ({distanceToPlayer:F1}m > {maxChaseDistance}m), returning to patrol");
             currentPath = null;
-            ChangeState(State.Patrol);
+            ReturnToPatrolFromChase();
             return;
+        }
+
+        // Check apakah player masih terlihat
+        bool canSeePlayerNow = CanSeePlayer();
+        
+        if (!canSeePlayerNow || player.isHidden)
+        {
+            // Player tidak terlihat, mulai hitung timer
+            losePlayerTimer += Time.deltaTime;
+            
+            if (Time.frameCount % 30 == 0)
+            {
+                Debug.Log($"[Enemy] Lost sight of player... {losePlayerTimer:F1}/{losePlayerTimeout}s");
+            }
+
+            if (losePlayerTimer >= losePlayerTimeout)
+            {
+                Debug.Log("[Enemy] Player lost for too long, returning to patrol");
+                currentPath = null;
+                ReturnToPatrolFromChase();
+                return;
+            }
+            
+            // Masih dalam timeout, terus chase ke posisi terakhir
+        }
+        else
+        {
+            // Player masih terlihat, reset timer
+            losePlayerTimer = 0f;
         }
 
         // Pathfinding chase
@@ -567,6 +602,44 @@ public class Enemy : MonoBehaviour
         {
             // Tanpa pathfinding: direct chase
             DirectChasePlayer(playerPos, currentPos);
+        }
+    }
+
+    private void ReturnToPatrolFromChase()
+    {
+        // Sama seperti return dari investigate, tapi dari chase
+        if (usePathfinding && GridPathfinding.Instance != null && lastPatrolCell != Vector3Int.zero)
+        {
+            Vector2 lastPatrolWorld = GridPathfinding.Instance.obstacleTilemap.GetCellCenterWorld(lastPatrolCell);
+            
+            Debug.Log($"[Enemy] Returning to patrol from chase: {lastPatrolWorld}");
+            
+            currentPath = GridPathfinding.Instance.FindPath(transform.position, lastPatrolWorld);
+            currentPathIndex = 0;
+            isReturningToPatrol = true;
+            
+            if (currentPath != null && currentPath.Count > 0)
+            {
+                Debug.Log($"[Enemy] Return path generated with {currentPath.Count} waypoints");
+                GridPathfinding.Instance.SetDebugPath(currentPath);
+                
+                // Ganti ke Investigate state untuk menggunakan return logic yang sudah ada
+                ChangeState(State.Investigate);
+            }
+            else
+            {
+                Debug.LogWarning("[Enemy] Failed to generate return path from chase");
+                currentPath = null;
+                isReturningToPatrol = false;
+                ChangeState(State.Patrol);
+            }
+        }
+        else
+        {
+            Debug.Log("[Enemy] No pathfinding or last position, switching to Patrol");
+            currentPath = null;
+            isReturningToPatrol = false;
+            ChangeState(State.Patrol);
         }
     }
 
@@ -844,9 +917,24 @@ public class Enemy : MonoBehaviour
             // Draw line to player
             if (player != null)
             {
-                Gizmos.color = new Color(1f, 0f, 0f, 0.3f); // Transparent red
+                float distToPlayer = Vector2.Distance(transform.position, player.transform.position);
+                
+                // Warna berubah jika player hampir keluar dari max chase distance
+                if (distToPlayer > maxChaseDistance * 0.8f)
+                {
+                    Gizmos.color = new Color(1f, 0.5f, 0f, 0.5f); // Orange warning
+                }
+                else
+                {
+                    Gizmos.color = new Color(1f, 0f, 0f, 0.3f); // Transparent red
+                }
+                
                 Gizmos.DrawLine(transform.position, player.transform.position);
             }
+            
+            // Draw max chase distance circle
+            Gizmos.color = new Color(1f, 0f, 0f, 0.2f);
+            Gizmos.DrawWireSphere(transform.position, maxChaseDistance);
         }
 
         // Draw vision range (FOV - hijau)
