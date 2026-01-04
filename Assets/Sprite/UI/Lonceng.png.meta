@@ -1,0 +1,1194 @@
+fileFormatVersion: 2
+guid: 58d4ae1b717571940aed069bc3c8fc70
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3196240210284354599
+    second: Lonceng_0
+  - first:
+      213: 7130623202258455970
+    second: Lonceng_1
+  - first:
+      213: 662756304388067467
+    second: Lonceng_2
+  - first:
+      213: 8310409677513234675
+    second: Lonceng_3
+  - first:
+      213: 384486196370227609
+    second: Lonceng_4
+  - first:
+      213: -7940225551198773390
+    second: Lonceng_5
+  - first:
+      213: 8621748787752904753
+    second: Lonceng_6
+  - first:
+      213: 7383960049785299840
+    second: Lonceng_7
+  - first:
+      213: -6465519827259078075
+    second: Lonceng_8
+  - first:
+      213: -7523827734977600564
+    second: Lonceng_9
+  - first:
+      213: 6597802015658252875
+    second: Lonceng_10
+  - first:
+      213: -4725174321111779567
+    second: Lonceng_11
+  - first:
+      213: 4083365402707628732
+    second: Lonceng_12
+  - first:
+      213: 3249771181717847703
+    second: Lonceng_13
+  - first:
+      213: -5954752837985387918
+    second: Lonceng_14
+  - first:
+      213: 2345279107871406330
+    second: Lonceng_15
+  - first:
+      213: 5917247580204908937
+    second: Lonceng_16
+  - first:
+      213: -8978645704376004177
+    second: Lonceng_17
+  - first:
+      213: -7309505707686872022
+    second: Lonceng_18
+  - first:
+      213: 2656943661315011693
+    second: Lonceng_19
+  - first:
+      213: -1234065665124014006
+    second: Lonceng_20
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Lonceng_0
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 349
+        width: 798
+        height: 736
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72c91de69835b5c20800000000000000
+      internalID: 3196240210284354599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_1
+      rect:
+        serializedVersion: 2
+        x: 1364
+        y: 753
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ad06c5d50015f260800000000000000
+      internalID: 7130623202258455970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_2
+      rect:
+        serializedVersion: 2
+        x: 1372
+        y: 732
+        width: 25
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8093bfe855923900800000000000000
+      internalID: 662756304388067467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_3
+      rect:
+        serializedVersion: 2
+        x: 1412
+        y: 709
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f8152e3291845370800000000000000
+      internalID: 8310409677513234675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_4
+      rect:
+        serializedVersion: 2
+        x: 1425
+        y: 675
+        width: 26
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99140b39828f55500800000000000000
+      internalID: 384486196370227609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_5
+      rect:
+        serializedVersion: 2
+        x: 1451
+        y: 668
+        width: 5
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27f11582ee6aec190800000000000000
+      internalID: -7940225551198773390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_6
+      rect:
+        serializedVersion: 2
+        x: 1455
+        y: 659
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 138aaaca7da96a770800000000000000
+      internalID: 8621748787752904753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_7
+      rect:
+        serializedVersion: 2
+        x: 1461
+        y: 518
+        width: 60
+        height: 140
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 083e02b1b88197660800000000000000
+      internalID: 7383960049785299840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_8
+      rect:
+        serializedVersion: 2
+        x: 1520
+        y: 508
+        width: 4
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54a4aff09fbd546a0800000000000000
+      internalID: -6465519827259078075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_9
+      rect:
+        serializedVersion: 2
+        x: 1520
+        y: 492
+        width: 6
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc3ad69b98ef59790800000000000000
+      internalID: -7523827734977600564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_10
+      rect:
+        serializedVersion: 2
+        x: 1523
+        y: 475
+        width: 4
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4a9aa10af9109b50800000000000000
+      internalID: 6597802015658252875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_11
+      rect:
+        serializedVersion: 2
+        x: 1523
+        y: 464
+        width: 4
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 117b5507dfecc6eb0800000000000000
+      internalID: -4725174321111779567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_12
+      rect:
+        serializedVersion: 2
+        x: 1524
+        y: 448
+        width: 5
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb2128cf2370ba830800000000000000
+      internalID: 4083365402707628732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_13
+      rect:
+        serializedVersion: 2
+        x: 1523
+        y: 427
+        width: 4
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79ef797fba1891d20800000000000000
+      internalID: 3249771181717847703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_14
+      rect:
+        serializedVersion: 2
+        x: 1523
+        y: 415
+        width: 4
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27ab1aee7d77c5da0800000000000000
+      internalID: -5954752837985387918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_15
+      rect:
+        serializedVersion: 2
+        x: 1521
+        y: 401
+        width: 5
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af8f1db3cea1c8020800000000000000
+      internalID: 2345279107871406330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_16
+      rect:
+        serializedVersion: 2
+        x: 1520
+        y: 388
+        width: 4
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9814722c2594e1250800000000000000
+      internalID: 5917247580204908937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_17
+      rect:
+        serializedVersion: 2
+        x: 1507
+        y: 335
+        width: 16
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa1d4928d41756380800000000000000
+      internalID: -8978645704376004177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_18
+      rect:
+        serializedVersion: 2
+        x: 1540
+        y: 383
+        width: 5
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2c32a9494b6f8a90800000000000000
+      internalID: -7309505707686872022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_19
+      rect:
+        serializedVersion: 2
+        x: 764
+        y: 303
+        width: 27
+        height: 79
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6438e0de2c5fd420800000000000000
+      internalID: 2656943661315011693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_20
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 242
+        width: 47
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a48e6c0e0d7bfdee0800000000000000
+      internalID: -1234065665124014006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_21
+      rect:
+        serializedVersion: 2
+        x: 790
+        y: 233
+        width: 41
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f05abe185f658ed41ae71e90c0325d1a
+      internalID: -391966817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_22
+      rect:
+        serializedVersion: 2
+        x: 1428
+        y: 200
+        width: 33
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f30435558920c7048969655eb3eb4a3a
+      internalID: -1653909904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_23
+      rect:
+        serializedVersion: 2
+        x: 831
+        y: 219
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa5ec40f5f4b84648af4a934c6621bb1
+      internalID: -300176174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_24
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 205
+        width: 11
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6eb9d03eee849434c850f41695647e4c
+      internalID: 422183173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_25
+      rect:
+        serializedVersion: 2
+        x: 857
+        y: 186
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26a6ae6b3935d7045b4fdd6412b02b03
+      internalID: 1481740225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_26
+      rect:
+        serializedVersion: 2
+        x: 1409
+        y: 180
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 997c9b6fa7b5f1e4a8c444a0bea1a6bf
+      internalID: -1789983090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_27
+      rect:
+        serializedVersion: 2
+        x: 887
+        y: 162
+        width: 12
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ef4cd8a5396e5c4db2799a7e5de400f
+      internalID: -207292470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_28
+      rect:
+        serializedVersion: 2
+        x: 902
+        y: 141
+        width: 23
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6987187f0121e9947be0cbc8e7b88af2
+      internalID: -51610765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_29
+      rect:
+        serializedVersion: 2
+        x: 1374
+        y: 151
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 818c0c0c870dcdc49ae4d00149ec80fd
+      internalID: -1726800447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_30
+      rect:
+        serializedVersion: 2
+        x: 1385
+        y: 159
+        width: 19
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32a7a4b50043d12459623f039bce3f8e
+      internalID: 494666895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_31
+      rect:
+        serializedVersion: 2
+        x: 926
+        y: 129
+        width: 18
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5308b1353c607846b269201d8f7f976
+      internalID: -416313803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_32
+      rect:
+        serializedVersion: 2
+        x: 1279
+        y: 98
+        width: 70
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab933a8d744fa94459f389ff4ab2bd28
+      internalID: 237880816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_33
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 134
+        width: 23
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d642e26dcf71b4a4097c528171cdfae1
+      internalID: 1935684730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_34
+      rect:
+        serializedVersion: 2
+        x: 945
+        y: 78
+        width: 138
+        height: 51
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 808a067fb354d754eb9b4396a2636b24
+      internalID: 300341215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_35
+      rect:
+        serializedVersion: 2
+        x: 1202
+        y: 78
+        width: 28
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a78470fada73ba43830456460eb342e
+      internalID: -2073958192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_36
+      rect:
+        serializedVersion: 2
+        x: 1231
+        y: 84
+        width: 47
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14fe1334bf48efb429f35fde7f5d38b6
+      internalID: 2018283723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_37
+      rect:
+        serializedVersion: 2
+        x: 1084
+        y: 77
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 582136f679acc7d4a9c60f7d4f39d2ad
+      internalID: -1409245824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_38
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 77
+        width: 7
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 441f538a846b7dc4b95078ad2f9ae35c
+      internalID: 1901321177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_39
+      rect:
+        serializedVersion: 2
+        x: 1099
+        y: 75
+        width: 6
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7627b0a034b5ea4eb072fab35db664c
+      internalID: 706142090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_40
+      rect:
+        serializedVersion: 2
+        x: 1107
+        y: 74
+        width: 22
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44020710c23a89e4da2c8a1a91589c43
+      internalID: -1105553592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_41
+      rect:
+        serializedVersion: 2
+        x: 1140
+        y: 74
+        width: 19
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99134e2b0bfed4742b226c77cc1ba2f9
+      internalID: 127425579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_42
+      rect:
+        serializedVersion: 2
+        x: 1168
+        y: 74
+        width: 25
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1432d3083ce17234892c990b33abb901
+      internalID: 1211154789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lonceng_43
+      rect:
+        serializedVersion: 2
+        x: 1195
+        y: 77
+        width: 5
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 344ad473834b0064290e828ffad1d504
+      internalID: -39670430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 854f3015a1877e5449b7107a83f81642
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Lonceng_0: 3196240210284354599
+      Lonceng_1: 7130623202258455970
+      Lonceng_10: 6597802015658252875
+      Lonceng_11: -4725174321111779567
+      Lonceng_12: 4083365402707628732
+      Lonceng_13: 3249771181717847703
+      Lonceng_14: -5954752837985387918
+      Lonceng_15: 2345279107871406330
+      Lonceng_16: 5917247580204908937
+      Lonceng_17: -8978645704376004177
+      Lonceng_18: -7309505707686872022
+      Lonceng_19: 2656943661315011693
+      Lonceng_2: 662756304388067467
+      Lonceng_20: -1234065665124014006
+      Lonceng_21: -391966817
+      Lonceng_22: -1653909904
+      Lonceng_23: -300176174
+      Lonceng_24: 422183173
+      Lonceng_25: 1481740225
+      Lonceng_26: -1789983090
+      Lonceng_27: -207292470
+      Lonceng_28: -51610765
+      Lonceng_29: -1726800447
+      Lonceng_3: 8310409677513234675
+      Lonceng_30: 494666895
+      Lonceng_31: -416313803
+      Lonceng_32: 237880816
+      Lonceng_33: 1935684730
+      Lonceng_34: 300341215
+      Lonceng_35: -2073958192
+      Lonceng_36: 2018283723
+      Lonceng_37: -1409245824
+      Lonceng_38: 1901321177
+      Lonceng_39: 706142090
+      Lonceng_4: 384486196370227609
+      Lonceng_40: -1105553592
+      Lonceng_41: 127425579
+      Lonceng_42: 1211154789
+      Lonceng_43: -39670430
+      Lonceng_5: -7940225551198773390
+      Lonceng_6: 8621748787752904753
+      Lonceng_7: 7383960049785299840
+      Lonceng_8: -6465519827259078075
+      Lonceng_9: -7523827734977600564
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
