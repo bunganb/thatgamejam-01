@@ -25089,8 +25089,9 @@ GameObject:
   - component: {fileID: 347581587}
   - component: {fileID: 347581586}
   - component: {fileID: 347581585}
+  - component: {fileID: 347581588}
   m_Layer: 5
-  m_Name: Next
+  m_Name: Retry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25112,8 +25113,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -858, y: -389}
-  m_SizeDelta: {x: 111.936, y: 111.936}
+  m_AnchoredPosition: {x: 0.000034332, y: -328}
+  m_SizeDelta: {x: 284.364, y: 111.936}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &347581585
 MonoBehaviour:
@@ -25158,7 +25159,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 347581586}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 347581588}
+        m_TargetAssemblyTypeName: ButtonNavigation, Assembly-CSharp
+        m_MethodName: OnButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &347581586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25179,7 +25192,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3149804705344806107, guid: 7f264931531e75443839d845c93170a6, type: 3}
+  m_Sprite: {fileID: 5207804079435638006, guid: 9ebc0ae4aacd4294e882900f8b797e28, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -25197,6 +25210,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 347581583}
   m_CullTransparentMesh: 1
+--- !u!114 &347581588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 347581583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 369f5bf2bf496d64d8840e81bf350bfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonNavigation
+  ButtonTarget: 0
 --- !u!1 &381025227
 GameObject:
   m_ObjectHideFlags: 0
@@ -38838,7 +38864,7 @@ GameObject:
   - component: {fileID: 1439034317}
   - component: {fileID: 1439034316}
   m_Layer: 5
-  m_Name: Win
+  m_Name: Lose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38883,7 +38909,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3302273018506617863, guid: 75f1cb19349419a48a13c256b54aba41, type: 3}
+  m_Sprite: {fileID: -1687468796529876223, guid: b8f8d8f1bb9c5b84eb4f7a7f680f49f6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
