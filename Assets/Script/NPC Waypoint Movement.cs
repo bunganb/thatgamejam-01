@@ -59,4 +59,17 @@ public class NPCWaypointMovement : MonoBehaviour
     {
         isMoving = enable;
     }
+    public void SetWaypoints(List<Transform> newWaypoints)
+    {
+        if (newWaypoints == null || newWaypoints.Count == 0)
+        {
+            Debug.LogWarning("Waypoint list empty");
+            return;
+        }
+
+        waypoints = newWaypoints;
+        currentWaypointIndex = 0;
+        direction = 1;
+    }
+
 }

@@ -1,40 +1,61 @@
 using UnityEngine;
 using System.Collections.Generic;
+
 public class SequencePuzzleController : MonoBehaviour
 {
     [Header("Puzzle Settings")]
-    public List<SequencePuzzleStep> puzzleSteps;
-    private int currentStepIndex = 0;
+    public List<int> correctSequence = new List<int>();
 
-    public void NotifyActived(SequencePuzzleStep step)
+    private int currentIndex = 0;
+    private bool isSolved = false;
+
+    private void Start()
     {
-        if (puzzleSteps[currentStepIndex] == step)
+        ResetPuzzle();
+    }
+
+    public void ReceiveInput(int inputID)
+    {
+        if (isSolved)
+            return;
+
+        if (correctSequence == null || correctSequence.Count == 0)
         {
-            currentStepIndex++;
-            Debug.Log("Correct step! Moved to step index: " + currentStepIndex);
-            if (currentStepIndex >= puzzleSteps.Count)
+            Debug.LogWarning("Correct sequence is empty");
+            return;
+        }
+
+        Debug.Log($"Input: {inputID}, Expect: {correctSequence[currentIndex]}");
+
+        if (inputID == correctSequence[currentIndex])
+        {
+            currentIndex++;
+
+            if (currentIndex >= correctSequence.Count)
             {
                 PuzzleCompleted();
             }
         }
         else
         {
-            Debug.Log("Incorrect step! Resetting puzzle.");
+            Debug.Log("Wrong input, reset puzzle");
             ResetPuzzle();
         }
     }
+
     private void PuzzleCompleted()
     {
+        isSolved = true;
         Debug.Log("Puzzle Completed!");
-        Destroy(this.gameObject);
-        // Add additional logic for puzzle completion here
+        this.gameObject.SetActive(false);
+        // Contoh: buka pintu
+        // door.Open();
     }
+
     private void ResetPuzzle()
     {
-        currentStepIndex = 0;
-        foreach (var step in puzzleSteps)
-        {
-            step.ResetStep();
-        }
+        currentIndex = 0;
     }
+
+    public bool IsSolved => isSolved;
 }
