@@ -10,6 +10,10 @@ public class Enemy : MonoBehaviour
     [Header("Player")]
     public PlayerMovement player;
 
+    [Header("Room/Level System")]
+    [Tooltip("ID room/level tempat enemy berada (harus sama dengan puzzle/noise di room ini)")]
+    public string roomID = "Room1";
+
     [Header("FOV Visual")]
     [SerializeField] private GameObject fovPrefab;
     private FieldOfView2D fovVisual;
@@ -65,7 +69,6 @@ public class Enemy : MonoBehaviour
     
     private float lastChasePathUpdate;
     private float losePlayerTimer; // Timer saat player hilang dari pandangan
-    
     [Header("Alert Settings")]
     public float alertDuration = 2f;
     public float alertRotationSpeed = 45f;
@@ -166,6 +169,16 @@ public class Enemy : MonoBehaviour
         // Ignore noise saat sedang mengejar
         if (state == State.Catch) return;
 
+        // CRITICAL: Check room ID - hanya dengar noise dari room yang sama
+        if (!string.IsNullOrEmpty(noise.roomID) && !string.IsNullOrEmpty(roomID))
+        {
+            if (noise.roomID != roomID)
+            {
+                Debug.Log($"[Enemy] Ignored noise from different room: {noise.roomID} (my room: {roomID})");
+                return;
+            }
+        }
+
         float distance = Vector2.Distance(transform.position, noise.position);
         
         // Tentukan hearing distance berdasarkan tipe noise
@@ -178,7 +191,7 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        Debug.Log($"[Enemy] Heard {noise.type} at distance {distance:F2}");
+        Debug.Log($"[Enemy] Heard {noise.type} at distance {distance:F2} in room {roomID}");
 
         if (noise.type == NoiseType.DogBark)
         {
@@ -466,11 +479,18 @@ public class Enemy : MonoBehaviour
             // Masih ada waypoint yang harus dituju
             Vector2 targetWaypoint = currentPath[currentPathIndex];
             float distanceToWaypoint = Vector2.Distance(currentPos, targetWaypoint);
-            
+
+            // Debug setiap beberapa frame
+            if (Time.frameCount % 30 == 0)
+            {
+                Debug.Log($"[Enemy] Following path: waypoint {currentPathIndex}/{currentPath.Count}, distance: {distanceToWaypoint:F2}, returning: {isReturningToPatrol}");
+            }
+
             if (distanceToWaypoint <= 0.3f)
             {
                 // Pindah ke waypoint berikutnya
                 currentPathIndex++;
+                Debug.Log($"[Enemy] Reached waypoint {currentPathIndex - 1}, moving to next (now {currentPathIndex}/{currentPath.Count})");
             }
             else
             {
@@ -613,6 +633,7 @@ public class Enemy : MonoBehaviour
                 return;
             }
             
+            // Masih dalam timeout, terus chase ke posisi terakhir
         }
         else
         {
@@ -680,6 +701,7 @@ public class Enemy : MonoBehaviour
             }
             else
             {
+                // Fallback: direct chase jika path gagal
                 DirectChasePlayer(playerPos, currentPos);
             }
         }
@@ -811,8 +833,9 @@ public class Enemy : MonoBehaviour
         if (player == null || !player.isAlive) return;
 
         player.isAlive = false;
-        UIManager.Instance.GameOverPanelUI();
+        Debug.Log("[Enemy] GAME OVER - Player Caught!");
         
+        // Opsional: Tambahkan event atau method game over disini
         Time.timeScale = 0f;
     }
 
