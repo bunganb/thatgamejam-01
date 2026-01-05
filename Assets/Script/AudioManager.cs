@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
-
+    private float bgmVolume;
+    private float sfxVolume;
     [Header("Slider")]
     public Slider sfxVolumeSlider;
     public Slider bgmVolumeSlider;
@@ -48,8 +49,8 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        float bgmVolume = PlayerPrefs.GetFloat("BGMVolume", 0.3f);
-        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.3f);
+         bgmVolume = PlayerPrefs.GetFloat("BGMVolume", 0.3f);
+         sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.3f);
 
         bgmVolumeSlider.value = bgmVolume;
         sfxVolumeSlider.value = sfxVolume;
@@ -95,5 +96,15 @@ public class AudioManager : MonoBehaviour
         {
             Debug.LogWarning($"SFX {type} belum terdaftar");
         }
+    }
+    public void EnterResultState()
+    {
+        bgmSource.volume = bgmVolume * 0.3f;   // BGM dikecilkan
+        sfxSource.volume = sfxVolume * 1.5f;   // SFX dikuatkan
+    }
+    public void ResetAudioState()
+    {
+        bgmSource.volume = bgmVolume;
+        sfxSource.volume = sfxVolume;
     }
 }

@@ -23,12 +23,14 @@ public class DogBarkController : MonoBehaviour
         Debug.Log($"[Dog] Bark activated in room: {roomID}");
 
         StartCoroutine(BarkRoutine());
+
     }
 
     private IEnumerator BarkRoutine()
     {
         isBarking = true;
         movement.StopMovement(true);
+        AudioManager.Instance.PlaySFX(SFXType.Anjing_Gong);
         yield return new WaitForSeconds(barkDuration);
         if (movement != null)
             movement.StopMovement(true);
