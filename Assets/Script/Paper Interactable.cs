@@ -1,77 +1,89 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class PaperInteractable : MonoBehaviour, IInteractable
 {
     public InteractionKey InteractionKey => InteractionKey.E;
-    [Header("UI Elements")]
-    public GameObject paperUI;
-    public GameObject panel;
+
+    [Header("Paper Content")]
+    public Sprite paperSprite;
+
+    [Header("UI")]
+    public GameObject icon;
 
     private bool isReading = false;
-    private GameObject currentPlayer;
     private PlayerMovement playerMovement;
 
     private void Awake()
     {
-        paperUI.SetActive(false);
-        panel.SetActive(false);
+        if (icon != null)
+            icon.SetActive(false);
     }
 
     public void OnEnter(GameObject player)
     {
-        this.currentPlayer = player;
-        this.playerMovement = player.GetComponent<PlayerMovement>();
-        if (!isReading)
-        {
-            paperUI.SetActive(true);
-        }
+        playerMovement = player.GetComponent<PlayerMovement>();
+
+        if (!isReading && icon != null)
+            icon.SetActive(true);
     }
+
     public void OnExit(GameObject player)
     {
-        if (!isReading)
-        {
-            paperUI.SetActive(false);
-            this.currentPlayer = null;
-            this.playerMovement = null;
-        }
+        if (isReading) return;
+
+        if (icon != null)
+            icon.SetActive(false);
+
+        playerMovement = null;
     }
+
     public void Interact(GameObject player)
     {
         if (isReading)
-        {
-            ClosePanel();
-        }
+            Close();
         else
-        {
-            OpenPanel();
-        }
+            Open();
     }
-    private void OpenPanel()
+
+    private void Open()
     {
-        panel.SetActive(true);
         isReading = true;
-        paperUI.SetActive(false);
+
+        if (icon != null)
+            icon.SetActive(false);
+
         playerMovement.enabled = false;
-        Time.timeScale = 0;
-        Debug.Log("Membuka panel kertas");
+        PaperPanelUI.Instance.Open(paperSprite);
+
+        Debug.Log($"Membuka kertas: {paperSprite.name}");
     }
-    private void ClosePanel()
+
+    private void Close()
     {
-        panel.SetActive(false);
         isReading = false;
-        paperUI.SetActive(true);
+
         playerMovement.enabled = true;
-        Time.timeScale = 1;
-        Debug.Log("Menutup panel kertas");
+        PaperPanelUI.Instance.Close();
+
+        if (icon != null)
+            icon.SetActive(true);
+
+        Debug.Log("Menutup kertas");
     }
+
     private void Update()
     {
         if (!isReading) return;
+
         var kb = Keyboard.current;
         if (kb == null) return;
-        if (kb.escapeKey.wasPressedThisFrame || kb.backspaceKey.wasPressedThisFrame)
+
+        if (kb.escapeKey.wasPressedThisFrame ||
+            kb.backspaceKey.wasPressedThisFrame ||
+            kb.eKey.wasPressedThisFrame)
         {
-            ClosePanel();
+            Close();
         }
     }
 }
