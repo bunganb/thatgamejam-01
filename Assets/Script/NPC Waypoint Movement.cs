@@ -24,8 +24,8 @@ public class NPCWaypointMovement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -65,7 +65,7 @@ public class NPCWaypointMovement : MonoBehaviour
     {
         float speedValue = velocity.magnitude;
 
-        animator.SetFloat("Speed", speedValue);
+        animator.SetFloat("Speed", speedValue);     
         animator.SetFloat("MoveX", velocity.x);
     }
 
