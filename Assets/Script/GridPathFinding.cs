@@ -12,6 +12,9 @@ public class GridPathfinding : MonoBehaviour
     [Tooltip("Maksimal node yang dicek (prevent infinite loop)")]
     public int maxIterations = 1000;
     
+    [Header("Debug")]
+    public bool showDebugLogs = true;
+    
     private static GridPathfinding instance;
     public static GridPathfinding Instance => instance;
 
@@ -34,20 +37,39 @@ public class GridPathfinding : MonoBehaviour
             return new List<Vector2> { targetWorld };
         }
 
-        Debug.Log($"[Pathfinding] Finding path from {startWorld} to {targetWorld}");
+        if (showDebugLogs)
+            Debug.Log($"[Pathfinding] Finding path from {startWorld} to {targetWorld}");
 
         // Convert world position ke grid cell
         Vector3Int startCell = obstacleTilemap.WorldToCell(startWorld);
         Vector3Int targetCell = obstacleTilemap.WorldToCell(targetWorld);
 
-        Debug.Log($"[Pathfinding] Start cell: {startCell}, Target cell: {targetCell}");
+        if (showDebugLogs)
+            Debug.Log($"[Pathfinding] Start cell: {startCell}, Target cell: {targetCell}");
+
+        // Check jika start adalah obstacle (shouldn't happen, tapi safety check)
+        if (IsObstacle(startCell))
+        {
+            Debug.LogWarning("[Pathfinding] Start position is inside obstacle! Finding nearest free cell...");
+            startCell = FindNearestFreeCell(startCell, 10);
+            if (showDebugLogs)
+                Debug.Log($"[Pathfinding] New start cell: {startCell}");
+        }
 
         // Check jika target adalah obstacle
         if (IsObstacle(targetCell))
         {
             Debug.LogWarning("[Pathfinding] Target is inside obstacle! Finding nearest free cell...");
-            targetCell = FindNearestFreeCell(targetCell);
-            Debug.Log($"[Pathfinding] New target cell: {targetCell}");
+            targetCell = FindNearestFreeCell(targetCell, 10);
+            if (showDebugLogs)
+                Debug.Log($"[Pathfinding] New target cell: {targetCell}");
+        }
+
+        // Double check: jika masih obstacle, return fallback
+        if (IsObstacle(startCell) || IsObstacle(targetCell))
+        {
+            Debug.LogError("[Pathfinding] Cannot find valid start or target cell!");
+            return new List<Vector2> { targetWorld };
         }
 
         // A* algorithm
@@ -82,7 +104,8 @@ public class GridPathfinding : MonoBehaviour
             // Sampai di target
             if (currentNode.position == targetCell)
             {
-                Debug.Log($"[Pathfinding] Path found! {iterations} iterations");
+                if (showDebugLogs)
+                    Debug.Log($"[Pathfinding] ✓ Path found! {iterations} iterations");
                 return RetracePath(startNode, currentNode);
             }
 
@@ -114,10 +137,11 @@ public class GridPathfinding : MonoBehaviour
         }
 
         // Tidak ada path ditemukan
-        Debug.LogError($"[Pathfinding] No path found from {startWorld} to {targetWorld} after {iterations} iterations");
+        Debug.LogError($"[Pathfinding] ✗ No path found from {startWorld} to {targetWorld} after {iterations} iterations");
         
         // Return direct path sebagai fallback
-        List<Vector2> fallbackPath = new List<Vector2> { targetWorld };
+        List<Vector2> fallbackPath = new List<Vector2>();
+        fallbackPath.Add(obstacleTilemap.GetCellCenterWorld(targetCell));
         return fallbackPath;
     }
 
@@ -130,7 +154,7 @@ public class GridPathfinding : MonoBehaviour
             cell + Vector3Int.left,
             cell + Vector3Int.right,
             
-            // Diagonal (opsional, uncomment jika mau diagonal movement)
+            // Uncomment untuk diagonal movement
             // cell + new Vector3Int(1, 1, 0),
             // cell + new Vector3Int(-1, 1, 0),
             // cell + new Vector3Int(1, -1, 0),
@@ -142,40 +166,51 @@ public class GridPathfinding : MonoBehaviour
 
     private bool IsObstacle(Vector3Int cell)
     {
-        bool hasObstacle = obstacleTilemap.HasTile(cell);
-        // Debug.Log($"[Pathfinding] Cell {cell} has obstacle: {hasObstacle}");
-        return hasObstacle;
+        return obstacleTilemap.HasTile(cell);
     }
 
-    private Vector3Int FindNearestFreeCell(Vector3Int blockedCell)
+    private Vector3Int FindNearestFreeCell(Vector3Int blockedCell, int maxRadius = 10)
     {
-        // Cari cell kosong terdekat dari cell yang terblokir
+        // BFS untuk cari cell kosong terdekat
         Queue<Vector3Int> queue = new Queue<Vector3Int>();
         HashSet<Vector3Int> visited = new HashSet<Vector3Int>();
         
         queue.Enqueue(blockedCell);
         visited.Add(blockedCell);
 
-        while (queue.Count > 0)
-        {
-            Vector3Int current = queue.Dequeue();
-            
-            if (!IsObstacle(current))
-            {
-                return current;
-            }
+        int searchRadius = 0;
 
-            foreach (Vector3Int neighbor in GetNeighbors(current))
+        while (queue.Count > 0 && searchRadius < maxRadius)
+        {
+            int levelSize = queue.Count;
+            searchRadius++;
+
+            for (int i = 0; i < levelSize; i++)
             {
-                if (!visited.Contains(neighbor))
+                Vector3Int current = queue.Dequeue();
+                
+                // Cek apakah cell ini kosong
+                if (!IsObstacle(current))
                 {
-                    visited.Add(neighbor);
-                    queue.Enqueue(neighbor);
+                    Debug.Log($"[Pathfinding] Found free cell at {current} (distance: {searchRadius})");
+                    return current;
+                }
+
+                // Add neighbors
+                foreach (Vector3Int neighbor in GetNeighbors(current))
+                {
+                    if (!visited.Contains(neighbor))
+                    {
+                        visited.Add(neighbor);
+                        queue.Enqueue(neighbor);
+                    }
                 }
             }
         }
 
-        return blockedCell; // Fallback jika tidak ada yang kosong
+        // Fallback: return original cell
+        Debug.LogWarning($"[Pathfinding] No free cell found within radius {maxRadius}!");
+        return blockedCell;
     }
 
     private float GetDistance(Vector3Int a, Vector3Int b)
@@ -201,12 +236,14 @@ public class GridPathfinding : MonoBehaviour
 
         path.Reverse();
 
-        Debug.Log($"[Pathfinding] Raw path has {path.Count} waypoints");
+        if (showDebugLogs)
+            Debug.Log($"[Pathfinding] Raw path has {path.Count} waypoints");
 
         // Simplify path (remove unnecessary waypoints)
         path = SimplifyPath(path);
         
-        Debug.Log($"[Pathfinding] Simplified path has {path.Count} waypoints");
+        if (showDebugLogs)
+            Debug.Log($"[Pathfinding] Simplified path has {path.Count} waypoints");
 
         return path;
     }
@@ -224,7 +261,8 @@ public class GridPathfinding : MonoBehaviour
         {
             Vector2 direction = (path[i + 1] - path[i]).normalized;
 
-            if (direction != previousDirection)
+            // Hanya add jika direction berubah
+            if (Vector2.Dot(direction, previousDirection) < 0.99f) // Toleransi kecil
             {
                 simplified.Add(path[i]);
                 previousDirection = direction;
@@ -247,25 +285,41 @@ public class GridPathfinding : MonoBehaviour
     {
         if (debugPath == null || debugPath.Count == 0) return;
 
+        // Draw path lines
         Gizmos.color = Color.cyan;
         for (int i = 0; i < debugPath.Count - 1; i++)
         {
             Gizmos.DrawLine(debugPath[i], debugPath[i + 1]);
-            Gizmos.DrawWireSphere(debugPath[i], 0.1f);
         }
 
-        if (debugPath.Count > 0)
-            Gizmos.DrawWireSphere(debugPath[debugPath.Count - 1], 0.1f);
+        // Draw waypoints
+        for (int i = 0; i < debugPath.Count; i++)
+        {
+            Gizmos.color = (i == 0) ? Color.green : (i == debugPath.Count - 1) ? Color.red : Color.yellow;
+            Gizmos.DrawWireSphere(debugPath[i], 0.15f);
+            
+            #if UNITY_EDITOR
+            Vector3 labelPos = new Vector3(debugPath[i].x, debugPath[i].y + 0.3f, 0);
+            UnityEditor.Handles.Label(labelPos, $"{i}", 
+                new GUIStyle() { 
+                    normal = new GUIStyleState() { textColor = Color.white },
+                    fontSize = 10
+                });
+            #endif
+        }
     }
 }
 
+/// <summary>
+/// Node class untuk A* pathfinding
+/// </summary>
 public class PathNode
 {
     public Vector3Int position;
     public PathNode parent;
     public float gCost; // Distance from start
-    public float hCost; // Distance to target
-    public float FCost => gCost + hCost;
+    public float hCost; // Distance to target (heuristic)
+    public float FCost => gCost + hCost; // Total cost
 
     public PathNode(Vector3Int pos, PathNode parent, float gCost, float hCost)
     {

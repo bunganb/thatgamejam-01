@@ -6,7 +6,7 @@ public class FieldOfView2D : MonoBehaviour
     [Header("View Settings")]
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField, Range(1, 360)] private float fov = 90f;
-    [SerializeField] private float viewDistance = 4.5f;
+    [SerializeField] private float viewDistance = 8f;
     [SerializeField, Range(3, 300)] private int rayCount = 100;
 
     [Header("Origin (local offset)")]
@@ -93,7 +93,12 @@ public class FieldOfView2D : MonoBehaviour
     public void SetAimDirection(Vector3 aimDir)
     {
         // startingAngle itu sudut paling "kiri" cone
-        startingAngle = GetAngleFromVector(aimDir) + fov / 2f;
+        // Normalize direction terlebih dahulu
+        if (aimDir.sqrMagnitude > 0.01f)
+        {
+            aimDir.Normalize();
+            startingAngle = GetAngleFromVector(aimDir) + fov / 2f;
+        }
     }
 
     public void SetFoV(float newFov) => fov = newFov;
@@ -109,7 +114,6 @@ public class FieldOfView2D : MonoBehaviour
         }
     }
 
-    // Method untuk update sorting order dari luar (opsional)
     public void SetSortingOrder(int order)
     {
         sortingOrder = order;
@@ -119,7 +123,6 @@ public class FieldOfView2D : MonoBehaviour
         }
     }
 
-    // ===== Helpers =====
     private static Vector3 GetVectorFromAngle(float angleDegrees)
     {
         float rad = angleDegrees * Mathf.Deg2Rad;
@@ -134,7 +137,6 @@ public class FieldOfView2D : MonoBehaviour
         return angle;
     }
 
-    // Debug visualization
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying) return;
