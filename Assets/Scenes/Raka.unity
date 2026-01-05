@@ -30298,6 +30298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GridPathfinding
   obstacleTilemap: {fileID: 0}
   maxIterations: 1000
+  showDebugLogs: 1
 --- !u!4 &689416264
 Transform:
   m_ObjectHideFlags: 0
@@ -32585,6 +32586,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   state: 0
   player: {fileID: 0}
+  animator: {fileID: 0}
+  animHorizontalParam: Horizontal
+  animVerticalParam: Vertical
+  animIsMovingParam: IsMoving
   roomID: Room1
   fovPrefab: {fileID: 9159514687809510213, guid: 1e1923cc6c61ff14ba8c99b7f854f4b6, type: 3}
   patrolPoints:
@@ -32593,7 +32598,6 @@ MonoBehaviour:
   moveSpeed: 10
   waitTime: 1.5
   rotationSpeed: 90
-  usePathfindingForPatrol: 1
   viewDistance: 6
   fov: 90
   obstacleMask:
@@ -32604,7 +32608,6 @@ MonoBehaviour:
   investigateStopDistance: 0.15
   investigateWaitTime: 1.2
   barkBlockWindow: 0.35
-  usePathfinding: 1
   investigateOffset: 1.5
   chasePathUpdateInterval: 0.5
   catchDistance: 0.5

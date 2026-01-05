@@ -9,6 +9,7 @@ public class HideSpot : MonoBehaviour, IInteractable
 
     private bool isHiding;
     private PlayerMovement player;
+    private SpriteRenderer PlayerSpriteRenderer;
 
     private void Awake()
     {
@@ -20,6 +21,7 @@ public class HideSpot : MonoBehaviour, IInteractable
     {
         icon?.SetActive(true);
         player = go.GetComponent<PlayerMovement>();
+        PlayerSpriteRenderer = go.GetComponent<SpriteRenderer>();
     }
 
     public void OnExit(GameObject go)
@@ -45,7 +47,10 @@ public class HideSpot : MonoBehaviour, IInteractable
         icon?.SetActive(false);
 
         player.isHidden = true;
-
+        if(PlayerSpriteRenderer != null)
+        {
+            PlayerSpriteRenderer.enabled = false;
+        }
         // efek fisik (opsional)
         player.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
     }
@@ -56,5 +61,9 @@ public class HideSpot : MonoBehaviour, IInteractable
         icon?.SetActive(true);
 
         player.isHidden = false;
+        if(PlayerSpriteRenderer != null)
+        {
+            PlayerSpriteRenderer.enabled = true;
+        }
     }
 }
