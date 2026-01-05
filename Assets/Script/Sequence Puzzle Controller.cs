@@ -49,6 +49,7 @@ public class SequencePuzzleController : MonoBehaviour
         isSolved = true;
         Debug.Log("Puzzle Completed!");
         this.gameObject.SetActive(false);
+        AudioManager.Instance.PlaySFX(SFXType.Pintu_Buka);
         // Contoh: buka pintu
         // door.Open();
     }

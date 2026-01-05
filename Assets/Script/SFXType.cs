@@ -4,5 +4,9 @@ public enum SFXType
     Tombol_Benar,
     Tombol_Salah,
     Anjing_Gong,
-    TombolKlik
+    Skill,
+    Menang,
+    Kalah,
+    Pintu_Buka,
+    Sembunyi
 }

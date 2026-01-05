@@ -97,6 +97,7 @@ public class UIManager : MonoBehaviour
     public void GoToMainMenu()
     {
         uiHistory.Clear();
+        AudioManager.Instance.ResetAudioState();
         Reset();
         SwitchTo(MainMenuPanel, false);
         Time.timeScale = 0f;
@@ -163,12 +164,16 @@ public class UIManager : MonoBehaviour
     { 
         GameOverPanel.SetActive(true);
         Time.timeScale = 0f;
+        AudioManager.Instance.EnterResultState();
+        AudioManager.Instance.PlaySFX(SFXType.Kalah);
     }
 
     public void WinPanelUI()
     {
         WinPanel.SetActive(true);
         Time.timeScale = 0f;
+        AudioManager.Instance.EnterResultState();
+        AudioManager.Instance.PlaySFX(SFXType.Menang);
     }
 
 }

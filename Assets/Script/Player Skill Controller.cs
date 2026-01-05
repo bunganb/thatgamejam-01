@@ -15,7 +15,7 @@ public class PlayerSkillController : MonoBehaviour
     {
         if (IsOnCooldown || dog == null)
             return false;
-
+        AudioManager.Instance.PlaySFX(SFXType.Skill);
         dog.ActiveBark();
         StartCoroutine(CooldownRoutine());
         return true;
