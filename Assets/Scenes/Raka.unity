@@ -320,6 +320,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 2
   controller: {fileID: 1283021707}
+  roomID: Room1
   ui: {fileID: 1883068643}
 --- !u!1 &66116724
 GameObject:
@@ -4576,6 +4577,16 @@ Tilemap:
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
   - first: {x: -1, y: 0, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 2
+      m_TileSpriteIndex: 3
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 3
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 0, y: 0, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 2
@@ -10011,7 +10022,7 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 35
     m_Data: {fileID: 11400000, guid: 05b05fdf499b7ba47a0c2f30165387fc, type: 2}
-  - m_RefCount: 324
+  - m_RefCount: 325
     m_Data: {fileID: 11400000, guid: 3f423c37b586d4049a110b5dfd7f4079, type: 2}
   - m_RefCount: 552
     m_Data: {fileID: 11400000, guid: 0d62161649cb82c4e80a01714d8b2947, type: 2}
@@ -10022,12 +10033,12 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 35
     m_Data: {fileID: -2118688534, guid: 52dfba3e92d62e248ab52bcd724bca5d, type: 3}
-  - m_RefCount: 324
+  - m_RefCount: 325
     m_Data: {fileID: 936349671, guid: 52dfba3e92d62e248ab52bcd724bca5d, type: 3}
   - m_RefCount: 552
     m_Data: {fileID: 1537186282, guid: 52dfba3e92d62e248ab52bcd724bca5d, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 911
+  - m_RefCount: 912
     m_Data:
       e00: 1
       e01: 0
@@ -10052,7 +10063,7 @@ Tilemap:
     m_Data: {r: 4.1584532e-16, g: 4.1584532e-16, b: 4.1584532e-16, a: 4.1584532e-16}
   - m_RefCount: 0
     m_Data: {r: 1.65e-43, g: 1.65e-43, b: 1.65e-43, a: 1.65e-43}
-  - m_RefCount: 911
+  - m_RefCount: 912
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -10392,8 +10403,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a6c8129ea8a9546a1aa9c73d0ad856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaperInteractable
-  paperUI: {fileID: 1466724347}
-  panel: {fileID: 1131011955}
+  paperSprite: {fileID: 21300000, guid: d64a08984e72b0b479fde2c93e70563b, type: 3}
+  icon: {fileID: 1466724347}
 --- !u!61 &235729173
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10912,6 +10923,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 3
   controller: {fileID: 104868162}
+  roomID: Room1
   ui: {fileID: 1217324858}
 --- !u!61 &291819546
 BoxCollider2D:
@@ -11567,7 +11579,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -2224474878120320963, guid: f0297a87b246d4c4da85a06607779a5e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11625,8 +11637,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a6c8129ea8a9546a1aa9c73d0ad856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaperInteractable
-  paperUI: {fileID: 585337886}
-  panel: {fileID: 1131011955}
+  paperSprite: {fileID: 21300000, guid: 4ac500c0f5bfde541b05f77b109b01cf, type: 3}
+  icon: {fileID: 585337886}
 --- !u!61 &324720120
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12072,6 +12084,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 4
   controller: {fileID: 1283021707}
+  roomID: Room1
   ui: {fileID: 518710412}
 --- !u!1 &422062005
 GameObject:
@@ -12124,6 +12137,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 2
   controller: {fileID: 298617588}
+  roomID: Room1
   ui: {fileID: 1289777623}
 --- !u!61 &422062008
 BoxCollider2D:
@@ -13009,7 +13023,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -2224474878120320963, guid: f0297a87b246d4c4da85a06607779a5e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -13475,6 +13489,7 @@ GameObject:
   - component: {fileID: 726463227}
   - component: {fileID: 726463226}
   - component: {fileID: 726463225}
+  - component: {fileID: 726463228}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -13565,6 +13580,20 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &726463228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726463223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4080dab16aa6641459053a201474c114, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PaperPanelUI
+  panel: {fileID: 1131011955}
+  paperImage: {fileID: 2140842132}
 --- !u!1 &756216084
 GameObject:
   m_ObjectHideFlags: 0
@@ -14099,6 +14128,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 4
   controller: {fileID: 298617588}
+  roomID: Room1
   ui: {fileID: 1585173883}
 --- !u!61 &806138415
 BoxCollider2D:
@@ -14679,8 +14709,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a6c8129ea8a9546a1aa9c73d0ad856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaperInteractable
-  paperUI: {fileID: 1907476087}
-  panel: {fileID: 1131011955}
+  paperSprite: {fileID: 21300000, guid: f3544959612d7564b8f112ab8378f433, type: 3}
+  icon: {fileID: 1907476087}
 --- !u!61 &872497356
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15230,6 +15260,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 3
   controller: {fileID: 1283021707}
+  roomID: Room1
   ui: {fileID: 526864619}
 --- !u!1 &970140656
 GameObject:
@@ -15280,6 +15311,8 @@ MonoBehaviour:
   CreditsPanel: {fileID: 1492475668}
   InGamePanel: {fileID: 261395860}
   PausePanel: {fileID: 1509382577}
+  WinPanel: {fileID: 0}
+  GameOverPanel: {fileID: 0}
   skillCooldownImage: {fileID: 294059338}
   SkillButton: {fileID: 1448966807}
 --- !u!1 &985715801
@@ -15375,6 +15408,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   state: 0
   player: {fileID: 0}
+  roomID: Room1
   fovPrefab: {fileID: 9159514687809510213, guid: 1e1923cc6c61ff14ba8c99b7f854f4b6, type: 3}
   patrolPoints:
   - {fileID: 562835171}
@@ -15552,8 +15586,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a6c8129ea8a9546a1aa9c73d0ad856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaperInteractable
-  paperUI: {fileID: 301273300}
-  panel: {fileID: 1131011955}
+  paperSprite: {fileID: 21300000, guid: fe5b42637ee220947927ba4f2f84c6a1, type: 3}
+  icon: {fileID: 301273300}
 --- !u!61 &1062209937
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15873,7 +15907,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -2224474878120320963, guid: f0297a87b246d4c4da85a06607779a5e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -16098,8 +16132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a6c8129ea8a9546a1aa9c73d0ad856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaperInteractable
-  paperUI: {fileID: 1894877147}
-  panel: {fileID: 1131011955}
+  paperSprite: {fileID: 21300000, guid: 8498d5338ee2dfc4b8830ec535d0d68a, type: 3}
+  icon: {fileID: 1894877147}
 --- !u!61 &1111248687
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16381,7 +16415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -16417,7 +16451,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2140842134}
   m_Father: {fileID: 726463224}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -16459,6 +16494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DogBarkController
   barkDuration: 1.5
+  roomID: Room1
   movement: {fileID: 1134621299}
 --- !u!114 &1134621299
 MonoBehaviour:
@@ -17828,8 +17864,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a6c8129ea8a9546a1aa9c73d0ad856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaperInteractable
-  paperUI: {fileID: 1208102285}
-  panel: {fileID: 1131011955}
+  paperSprite: {fileID: 21300000, guid: 77e35b12bf7edea44b409951172c5068, type: 3}
+  icon: {fileID: 1208102285}
 --- !u!61 &1190910480
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18293,7 +18329,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -2224474878120320963, guid: f0297a87b246d4c4da85a06607779a5e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -18368,7 +18404,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -2224474878120320963, guid: f0297a87b246d4c4da85a06607779a5e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -19021,6 +19057,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 3
   controller: {fileID: 298617588}
+  roomID: Room1
   ui: {fileID: 1975396747}
 --- !u!61 &1286645050
 BoxCollider2D:
@@ -19384,8 +19421,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a6c8129ea8a9546a1aa9c73d0ad856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaperInteractable
-  paperUI: {fileID: 1869174554}
-  panel: {fileID: 1131011955}
+  paperSprite: {fileID: 21300000, guid: 9635606866248b74ab64ca20d252fc78, type: 3}
+  icon: {fileID: 1869174554}
 --- !u!61 &1326199031
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -19541,6 +19578,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 4
   controller: {fileID: 104868162}
+  roomID: Room1
   ui: {fileID: 1141856924}
 --- !u!61 &1333802535
 BoxCollider2D:
@@ -19801,9 +19839,7 @@ CompositeCollider2D:
         Y: 75000008
       - X: -401191392
         Y: 75000008
-    - - X: -191220704
-        Y: 34218752
-      - X: -191220704
+    - - X: -191324992
         Y: 45000000
       - X: -191250000
         Y: 45000000
@@ -19833,11 +19869,11 @@ CompositeCollider2D:
         Y: 45000004
       - X: -195000000
         Y: 45000000
-      - X: -198808592
+      - X: -198675008
         Y: 45000000
-      - X: -198808592
+      - X: -198675008
         Y: 30000000
-      - X: -191250000
+      - X: -191324992
         Y: 30000000
     - - X: -390000000
         Y: -56953124
@@ -19985,9 +20021,7 @@ CompositeCollider2D:
         Y: -30000000
       - X: -26325002
         Y: -30000000
-    - - X: -146220704
-        Y: 4218750
-      - X: -146220704
+    - - X: -146324992
         Y: 15000000
       - X: -146250000
         Y: 15000000
@@ -20004,8 +20038,12 @@ CompositeCollider2D:
       - X: -153808592
         Y: 45000000
       - X: -153808592
+        Y: 15000000
+      - X: -153675008
+        Y: 15000000
+      - X: -153675008
         Y: 0
-      - X: -146250000
+      - X: -146324992
         Y: 0
     - - X: -180000000
         Y: -56953124
@@ -20345,12 +20383,11 @@ CompositeCollider2D:
       - {x: -25.499971, y: 5.018555}
       - {x: -20.999996, y: 5.018553}
       - {x: -19.883783, y: 4.5000005}
-      - {x: -19.88086, y: 4.4999704}
-      - {x: -19.88083, y: 3}
-      - {x: -19.125, y: 3.000029}
-      - {x: -19.12207, y: 3.4218745}
-      - {x: -19.122099, y: 4.5}
-      - {x: -19.125, y: 4.5000296}
+      - {x: -19.8675, y: 4.4999704}
+      - {x: -19.867472, y: 3}
+      - {x: -19.1325, y: 3.0000293}
+      - {x: -19.132471, y: 4.5}
+      - {x: -19.125, y: 4.500029}
       - {x: -19.12207, y: 4.9218745}
       - {x: -19.122099, y: 6}
       - {x: -19.125, y: 6.0000296}
@@ -20548,17 +20585,18 @@ CompositeCollider2D:
       - {x: 13.499971, y: 9}
       - {x: -40.5, y: 8.99997}
       - {x: -40.499973, y: -5.698242}
-    - - {x: -14.625029, y: 0}
-      - {x: -14.62207, y: 0.4218744}
-      - {x: -14.622099, y: 1.5}
-      - {x: -14.625, y: 1.5000296}
+    - - {x: -14.632528, y: 0}
+      - {x: -14.63247, y: 1.5}
+      - {x: -14.625, y: 1.500029}
       - {x: -14.62207, y: 1.9218744}
       - {x: -14.622099, y: 3}
       - {x: -14.625, y: 3.0000296}
       - {x: -14.62207, y: 3.4218745}
       - {x: -14.622099, y: 4.5}
       - {x: -15.380859, y: 4.499971}
-      - {x: -15.380831, y: 0}
+      - {x: -15.380831, y: 1.5}
+      - {x: -15.367501, y: 1.4999707}
+      - {x: -15.367473, y: 0}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -21365,8 +21403,8 @@ Tilemap:
   - first: {x: -11, y: 0, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 11
+      m_TileIndex: 6
+      m_TileSpriteIndex: 4
       m_TileMatrixIndex: 0
       m_TileColorIndex: 8
       m_TileObjectToInstantiateIndex: 65535
@@ -21375,8 +21413,8 @@ Tilemap:
   - first: {x: -10, y: 0, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 12
-      m_TileSpriteIndex: 12
+      m_TileIndex: 7
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 0
       m_TileColorIndex: 8
       m_TileObjectToInstantiateIndex: 65535
@@ -21505,8 +21543,8 @@ Tilemap:
   - first: {x: -14, y: 2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 11
+      m_TileIndex: 6
+      m_TileSpriteIndex: 4
       m_TileMatrixIndex: 0
       m_TileColorIndex: 8
       m_TileObjectToInstantiateIndex: 65535
@@ -21515,8 +21553,8 @@ Tilemap:
   - first: {x: -13, y: 2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 12
-      m_TileSpriteIndex: 12
+      m_TileIndex: 7
+      m_TileSpriteIndex: 5
       m_TileMatrixIndex: 0
       m_TileColorIndex: 8
       m_TileObjectToInstantiateIndex: 65535
@@ -22154,7 +22192,7 @@ Tilemap:
       m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 23
+  - m_RefCount: 21
     m_Data: {fileID: 11400000, guid: f4f51c7416778014f8e0d46eb82e6529, type: 2}
   - m_RefCount: 50
     m_Data: {fileID: 11400000, guid: aab2a344add279e498805f11488433f7, type: 2}
@@ -22166,9 +22204,9 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 1
+  - m_RefCount: 3
     m_Data: {fileID: 11400000, guid: 2462831f263501a459c62200907c67e9, type: 2}
-  - m_RefCount: 1
+  - m_RefCount: 3
     m_Data: {fileID: 11400000, guid: 756ffd368e9c90c4390902e3f31163ca, type: 2}
   - m_RefCount: 2
     m_Data: {fileID: 11400000, guid: 04f0b3052b823d64ea68be9b53e24178, type: 2}
@@ -22178,7 +22216,7 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: ee8ad6f97d0630c488ccf38b96cd529c, type: 2}
   - m_RefCount: 5
     m_Data: {fileID: 11400000, guid: 3e96fa017f85ec940a46d8198739b34e, type: 2}
-  - m_RefCount: 22
+  - m_RefCount: 20
     m_Data: {fileID: 11400000, guid: b9327f29c49877c448607c13bc762c99, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 0
@@ -22189,9 +22227,9 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 1
+  - m_RefCount: 3
     m_Data: {fileID: 21300000, guid: 8f547cb2de657844184c00d717c512ed, type: 3}
-  - m_RefCount: 1
+  - m_RefCount: 3
     m_Data: {fileID: 21300000, guid: d1c5f267676900948a76136ca200cd53, type: 3}
   - m_RefCount: 2
     m_Data: {fileID: -591916042, guid: ea08ba3e047fdfa4ca00bcff58bd729b, type: 3}
@@ -22203,9 +22241,9 @@ Tilemap:
     m_Data: {fileID: 602084419, guid: ea08ba3e047fdfa4ca00bcff58bd729b, type: 3}
   - m_RefCount: 5
     m_Data: {fileID: -4409183802489487823, guid: ea08ba3e047fdfa4ca00bcff58bd729b, type: 3}
-  - m_RefCount: 23
+  - m_RefCount: 21
     m_Data: {fileID: -1440693788, guid: ea08ba3e047fdfa4ca00bcff58bd729b, type: 3}
-  - m_RefCount: 22
+  - m_RefCount: 20
     m_Data: {fileID: 75949926, guid: ea08ba3e047fdfa4ca00bcff58bd729b, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 146
@@ -22448,6 +22486,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 1
   controller: {fileID: 298617588}
+  roomID: Room1
   ui: {fileID: 501135210}
 --- !u!61 &1418600702
 BoxCollider2D:
@@ -22916,7 +22955,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -2224474878120320963, guid: f0297a87b246d4c4da85a06607779a5e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -24015,6 +24054,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 2
   controller: {fileID: 104868162}
+  roomID: Room1
   ui: {fileID: 788640541}
 --- !u!61 &1635680722
 BoxCollider2D:
@@ -24720,6 +24760,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 1
   controller: {fileID: 104868162}
+  roomID: Room1
   ui: {fileID: 1593187821}
 --- !u!61 &1764067919
 BoxCollider2D:
@@ -25498,7 +25539,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -2224474878120320963, guid: f0297a87b246d4c4da85a06607779a5e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -25753,7 +25794,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -2224474878120320963, guid: f0297a87b246d4c4da85a06607779a5e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -25843,7 +25884,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -2224474878120320963, guid: f0297a87b246d4c4da85a06607779a5e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -26055,6 +26096,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 1
   controller: {fileID: 1283021707}
+  roomID: Room1
   ui: {fileID: 1575741006}
 --- !u!1 &1941533418
 GameObject:
@@ -26706,8 +26748,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a6c8129ea8a9546a1aa9c73d0ad856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaperInteractable
-  paperUI: {fileID: 1205745935}
-  panel: {fileID: 1131011955}
+  paperSprite: {fileID: 21300000, guid: 6ee99a4e3ba092f47920b76b24d77d1e, type: 3}
+  icon: {fileID: 1205745935}
 --- !u!61 &2021479430
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -27162,8 +27204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a6c8129ea8a9546a1aa9c73d0ad856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaperInteractable
-  paperUI: {fileID: 1076753005}
-  panel: {fileID: 1131011955}
+  paperSprite: {fileID: 21300000, guid: 9175ba4c6933878438c3cc334af1b617, type: 3}
+  icon: {fileID: 1076753005}
 --- !u!61 &2115298732
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -27268,6 +27310,81 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &2140842131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2140842134}
+  - component: {fileID: 2140842133}
+  - component: {fileID: 2140842132}
+  m_Layer: 5
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2140842132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140842131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 77e35b12bf7edea44b409951172c5068, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &2140842133
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140842131}
+  m_CullTransparentMesh: 1
+--- !u!224 &2140842134
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2140842131}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1131011958}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.000030518, y: 0}
+  m_SizeDelta: {x: 1080, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

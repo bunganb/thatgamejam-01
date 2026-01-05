@@ -12,10 +12,7 @@ public class DogBarkController : MonoBehaviour
 
     [Header("References")]
     public NPCWaypointMovement movement;
-    private Animator animator;
-
     private bool isBarking = false;
-
     public void ActiveBark()
     {
         if (isBarking) return;
@@ -31,21 +28,11 @@ public class DogBarkController : MonoBehaviour
     private IEnumerator BarkRoutine()
     {
         isBarking = true;
-        
-        if(animator != null)
-            animator.SetBool("Bark", true);
-        
-        if (movement != null)
-            movement.StopMovement(false);
-        
+        movement.StopMovement(true);
         yield return new WaitForSeconds(barkDuration);
-        
         if (movement != null)
             movement.StopMovement(true);
-        
-        if(animator != null)
-            animator.SetBool("Bark", false);
-        
+        movement.StopMovement(false);
         isBarking = false;
     }
 }

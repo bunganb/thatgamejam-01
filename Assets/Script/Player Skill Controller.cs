@@ -21,7 +21,6 @@ public class PlayerSkillController : MonoBehaviour
         return true;
     }
 
-
     private IEnumerator CooldownRoutine()
     {
         IsOnCooldown = true;
