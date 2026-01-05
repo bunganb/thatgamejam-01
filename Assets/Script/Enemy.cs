@@ -10,6 +10,10 @@ public class Enemy : MonoBehaviour
     [Header("Player")]
     public PlayerMovement player;
 
+    [Header("Room/Level System")]
+    [Tooltip("ID room/level tempat enemy berada (harus sama dengan puzzle/noise di room ini)")]
+    public string roomID = "Room1";
+
     [Header("FOV Visual")]
     [SerializeField] private GameObject fovPrefab;
     private FieldOfView2D fovVisual;
@@ -65,7 +69,6 @@ public class Enemy : MonoBehaviour
     
     private float lastChasePathUpdate;
     private float losePlayerTimer; // Timer saat player hilang dari pandangan
-    
     [Header("Alert Settings")]
     public float alertDuration = 2f;
     public float alertRotationSpeed = 45f;
@@ -166,6 +169,16 @@ public class Enemy : MonoBehaviour
         // Ignore noise saat sedang mengejar
         if (state == State.Catch) return;
 
+        // CRITICAL: Check room ID - hanya dengar noise dari room yang sama
+        if (!string.IsNullOrEmpty(noise.roomID) && !string.IsNullOrEmpty(roomID))
+        {
+            if (noise.roomID != roomID)
+            {
+                Debug.Log($"[Enemy] Ignored noise from different room: {noise.roomID} (my room: {roomID})");
+                return;
+            }
+        }
+
         float distance = Vector2.Distance(transform.position, noise.position);
         
         // Tentukan hearing distance berdasarkan tipe noise
@@ -178,7 +191,7 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        Debug.Log($"[Enemy] Heard {noise.type} at distance {distance:F2}");
+        Debug.Log($"[Enemy] Heard {noise.type} at distance {distance:F2} in room {roomID}");
 
         if (noise.type == NoiseType.DogBark)
         {

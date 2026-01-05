@@ -1,22 +1,29 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class DogBarkController : MonoBehaviour
 {
     [Header("Bark Settings")]
     public float barkDuration = 1.5f;
+
+    [Header("Room/Level System")]
+    [Tooltip("ID room/level tempat dog berada (harus sama dengan enemy di room ini)")]
+    public string roomID = "Room1";
+
     [Header("References")]
     public NPCWaypointMovement movement;
+    private Animator animator;
+
     private bool isBarking = false;
+
     public void ActiveBark()
     {
         if (isBarking) return;
 
-        NoiseSystem.Emit(new NoiseInfo(
-            NoiseType.DogBark,
-            transform.position,
-            10f
-        ));
+        // Emit suara anjing dengan room ID
+        NoiseSystem.Emit(new NoiseInfo(NoiseType.DogBark, transform.position, 10f, roomID));
+        
+        Debug.Log($"[Dog] Bark activated in room: {roomID}");
 
         StartCoroutine(BarkRoutine());
     }
@@ -24,13 +31,21 @@ public class DogBarkController : MonoBehaviour
     private IEnumerator BarkRoutine()
     {
         isBarking = true;
-
-        // 🔴 BERHENTI SAAT BARK
-        movement.StopMovement(true);
+        
+        if(animator != null)
+            animator.SetBool("Bark", true);
+        
+        if (movement != null)
+            movement.StopMovement(false);
+        
         yield return new WaitForSeconds(barkDuration);
-        // 🟢 LANJUT JALAN SETELAH BARK
-        movement.StopMovement(false);
-
+        
+        if (movement != null)
+            movement.StopMovement(true);
+        
+        if(animator != null)
+            animator.SetBool("Bark", false);
+        
         isBarking = false;
     }
 }
