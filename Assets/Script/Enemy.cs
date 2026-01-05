@@ -466,18 +466,11 @@ public class Enemy : MonoBehaviour
             // Masih ada waypoint yang harus dituju
             Vector2 targetWaypoint = currentPath[currentPathIndex];
             float distanceToWaypoint = Vector2.Distance(currentPos, targetWaypoint);
-
-            // Debug setiap beberapa frame
-            if (Time.frameCount % 30 == 0)
-            {
-                Debug.Log($"[Enemy] Following path: waypoint {currentPathIndex}/{currentPath.Count}, distance: {distanceToWaypoint:F2}, returning: {isReturningToPatrol}");
-            }
-
+            
             if (distanceToWaypoint <= 0.3f)
             {
                 // Pindah ke waypoint berikutnya
                 currentPathIndex++;
-                Debug.Log($"[Enemy] Reached waypoint {currentPathIndex - 1}, moving to next (now {currentPathIndex}/{currentPath.Count})");
             }
             else
             {
@@ -620,7 +613,6 @@ public class Enemy : MonoBehaviour
                 return;
             }
             
-            // Masih dalam timeout, terus chase ke posisi terakhir
         }
         else
         {
@@ -688,7 +680,6 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                // Fallback: direct chase jika path gagal
                 DirectChasePlayer(playerPos, currentPos);
             }
         }
@@ -820,9 +811,8 @@ public class Enemy : MonoBehaviour
         if (player == null || !player.isAlive) return;
 
         player.isAlive = false;
-        Debug.Log("[Enemy] GAME OVER - Player Caught!");
+        UIManager.Instance.GameOverPanelUI();
         
-        // Opsional: Tambahkan event atau method game over disini
         Time.timeScale = 0f;
     }
 
