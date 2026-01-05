@@ -7,104 +7,107 @@ public class Enemy : MonoBehaviour
     public enum State { Patrol, Waiting, Investigate, Alert, Catch }
     public State state = State.Patrol;
 
+    /* ================= PLAYER ================= */
     [Header("Player")]
     public PlayerMovement player;
 
-    [Header("Room/Level System")]
-    [Tooltip("ID room/level tempat enemy berada (harus sama dengan puzzle/noise di room ini)")]
+    /* ================= ANIMATION ================= */
+    [Header("Animation")]
+    public Animator animator;
+    public string animHorizontalParam = "Horizontal";
+    public string animVerticalParam = "Vertical";
+    public string animIsMovingParam = "IsMoving";
+    private Vector2 lastMoveDirection = Vector2.down;
+
+    /* ================= ROOM ================= */
+    [Header("Room System")]
     public string roomID = "Room1";
 
+    /* ================= FOV ================= */
     [Header("FOV Visual")]
     [SerializeField] private GameObject fovPrefab;
     private FieldOfView2D fovVisual;
 
+    /* ================= MOVEMENT ================= */
     [Header("Movement")]
     public Transform[] patrolPoints;
     public float moveSpeed = 2f;
     public float waitTime = 1.5f;
-    public float rotationSpeed = 90f; // Rotation speed untuk Waiting state
-    [Tooltip("Gunakan pathfinding untuk patrol movement?")]
-    public bool usePathfindingForPatrol = true;
+    public float rotationSpeed = 90f;
 
     private int patrolIndex;
     private float stateTimer;
-    private float rotationDirection = 1f; // 1 atau -1 untuk rotasi kanan/kiri
+    private float rotationDirection = 1f;
 
+    /* ================= VISION ================= */
     [Header("Vision")]
     public float viewDistance = 6f;
     [Range(0f, 360f)] public float fov = 90f;
     public LayerMask obstacleMask;
 
-    [Header("Hearing (Noise Detection)")]
-    [Tooltip("Jarak maksimal enemy bisa dengar Dog Bark")]
+    /* ================= HEARING ================= */
+    [Header("Hearing")]
     public float barkHearingDistance = 15f;
-    [Tooltip("Jarak maksimal enemy bisa dengar Puzzle (set sangat besar untuk unlimited)")]
     public float puzzleHearingDistance = 999f;
-    
-    [Header("Investigate (Noise)")]
+
+    /* ================= INVESTIGATE ================= */
+    [Header("Investigate")]
     public float investigateStopDistance = 0.5f;
     public float investigateWaitTime = 2f;
     public float barkBlockWindow = 0.4f;
-    [Tooltip("Gunakan pathfinding untuk navigate ke target?")]
-    public bool usePathfinding = true;
-    [Tooltip("Offset jarak dari target noise (agar tidak menumpuk di puzzle)")]
     public float investigateOffset = 1.5f;
 
     private Vector2 investigateTarget;
     private List<Vector2> currentPath;
     private int currentPathIndex;
     private float lastBarkTime = -999f;
-    private Vector3Int lastPatrolCell; // Simpan posisi terakhir saat patrol
-    private bool isReturningToPatrol; // Flag untuk cek apakah sedang kembali
+    private Vector3Int lastPatrolCell;
 
-    [Header("Catch (Chase Player)")]
-    [Tooltip("Interval untuk recalculate path saat chase (detik)")]
+    /* ================= CHASE ================= */
+    [Header("Catch")]
     public float chasePathUpdateInterval = 0.5f;
-    [Tooltip("Jarak untuk consider player tertangkap")]
     public float catchDistance = 0.5f;
-    [Tooltip("Jarak maksimal chase (jika player lebih jauh, enemy return to patrol)")]
     public float maxChaseDistance = 20f;
-    [Tooltip("Waktu tunggu setelah player hilang dari view sebelum return (detik)")]
     public float losePlayerTimeout = 2f;
-    
+
     private float lastChasePathUpdate;
-    private float losePlayerTimer; // Timer saat player hilang dari pandangan
-    [Header("Alert Settings")]
+    private float losePlayerTimer;
+
+    /* ================= ALERT ================= */
+    [Header("Alert")]
     public float alertDuration = 2f;
     public float alertRotationSpeed = 45f;
     private Vector2 alertDirection;
 
+    /* ================= INTERNAL ================= */
     private Rigidbody2D rb;
-    private Vector2 lastPosition;
-    private float checkInterval = 0.1f;
     private float checkTimer;
+    private const float CHECK_INTERVAL = 0.1f;
+    private const float WAYPOINT_REACH_DISTANCE = 0.3f;
+
+    /* ================= UNITY ================= */
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        
         if (rb != null)
         {
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
             rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
 
+        if (animator == null)
+            animator = GetComponent<Animator>();
+
         if (fovPrefab != null)
         {
-            GameObject go = Instantiate(fovPrefab, transform);
-            fovVisual = go.GetComponent<FieldOfView2D>();
+            fovVisual = Instantiate(fovPrefab, transform)
+                .GetComponent<FieldOfView2D>();
         }
     }
 
-    private void OnEnable()
-    {
-        NoiseSystem.OnNoise += HandleNoise;
-    }
-
-    private void OnDisable()
-    {
-        NoiseSystem.OnNoise -= HandleNoise;
-    }
+    private void OnEnable() => NoiseSystem.OnNoise += HandleNoise;
+    private void OnDisable() => NoiseSystem.OnNoise -= HandleNoise;
 
     private void Start()
     {
@@ -114,84 +117,139 @@ public class Enemy : MonoBehaviour
             fovVisual.SetViewDistance(viewDistance);
         }
 
-        lastPosition = transform.position;
-        
-        // Validasi patrol points
-        if (patrolPoints == null || patrolPoints.Length == 0)
+        // PENTING: Validate dan fix semua patrol points
+        if (GridPathfinding.Instance != null && patrolPoints.Length > 0)
         {
-            Debug.LogWarning("[Enemy] No patrol points assigned!");
+            ValidateAndFixPatrolPoints();
         }
+
+        // Generate path ke patrol point pertama saat start
+        if (patrolPoints.Length > 0)
+        {
+            GeneratePath(patrolPoints[patrolIndex].position);
+        }
+    }
+
+    /// <summary>
+    /// Validate semua patrol points dan snap ke grid jika perlu
+    /// </summary>
+    private void ValidateAndFixPatrolPoints()
+    {
+        if (GridPathfinding.Instance == null || GridPathfinding.Instance.obstacleTilemap == null)
+        {
+            Debug.LogWarning($"[Enemy {gameObject.name}] Cannot validate patrol points - GridPathfinding not ready!");
+            return;
+        }
+
+        Tilemap tilemap = GridPathfinding.Instance.obstacleTilemap;
+        
+        for (int i = 0; i < patrolPoints.Length; i++)
+        {
+            if (patrolPoints[i] == null) continue;
+
+            Vector3 originalPos = patrolPoints[i].position;
+            Vector3Int cell = tilemap.WorldToCell(originalPos);
+            
+            // Check jika patrol point ada di obstacle
+            if (tilemap.HasTile(cell))
+            {
+                Debug.LogWarning($"[Enemy {gameObject.name}] Patrol point {i} is on obstacle at {cell}! Finding nearest free cell...");
+                
+                // Cari cell terdekat yang kosong
+                Vector3Int freeCell = FindNearestFreeCellForPatrol(cell);
+                Vector3 newPos = tilemap.GetCellCenterWorld(freeCell);
+                
+                patrolPoints[i].position = newPos;
+                Debug.Log($"[Enemy {gameObject.name}] Moved patrol point {i} from {originalPos} to {newPos}");
+            }
+            else
+            {
+                // Snap ke center cell untuk consistency
+                Vector3 snappedPos = tilemap.GetCellCenterWorld(cell);
+                if (Vector3.Distance(originalPos, snappedPos) > 0.1f)
+                {
+                    patrolPoints[i].position = snappedPos;
+                    Debug.Log($"[Enemy {gameObject.name}] Snapped patrol point {i} to grid center: {snappedPos}");
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Cari cell terdekat yang tidak ada obstacle
+    /// </summary>
+    private Vector3Int FindNearestFreeCellForPatrol(Vector3Int blockedCell)
+    {
+        Tilemap tilemap = GridPathfinding.Instance.obstacleTilemap;
+        Queue<Vector3Int> queue = new Queue<Vector3Int>();
+        HashSet<Vector3Int> visited = new HashSet<Vector3Int>();
+        
+        queue.Enqueue(blockedCell);
+        visited.Add(blockedCell);
+
+        while (queue.Count > 0)
+        {
+            Vector3Int current = queue.Dequeue();
+            
+            if (!tilemap.HasTile(current))
+            {
+                return current;
+            }
+
+            // Check 4 directions
+            Vector3Int[] neighbors = new Vector3Int[]
+            {
+                current + Vector3Int.up,
+                current + Vector3Int.down,
+                current + Vector3Int.left,
+                current + Vector3Int.right
+            };
+
+            foreach (Vector3Int neighbor in neighbors)
+            {
+                if (!visited.Contains(neighbor))
+                {
+                    visited.Add(neighbor);
+                    queue.Enqueue(neighbor);
+                }
+            }
+        }
+
+        return blockedCell; // Fallback
     }
 
     private void Update()
     {
         UpdateFOV();
 
-        // Check player visibility dengan interval untuk optimasi
         checkTimer += Time.deltaTime;
-        if (checkTimer >= checkInterval)
+        if (checkTimer >= CHECK_INTERVAL)
         {
             checkTimer = 0f;
-            
             if (state != State.Catch && CanSeePlayer())
-            {
                 ChangeState(State.Catch);
-            }
         }
 
-        // State machine
         switch (state)
         {
-            case State.Patrol:
-                HandlePatrol();
-                break;
-
-            case State.Waiting:
-                HandleWaiting();
-                break;
-
-            case State.Investigate:
-                HandleInvestigate();
-                break;
-
-            case State.Alert:
-                HandleAlert();
-                break;
-
-            case State.Catch:
-                HandleCatch();
-                break;
+            case State.Patrol: HandlePatrol(); break;
+            case State.Waiting: HandleWaiting(); break;
+            case State.Investigate: HandleInvestigate(); break;
+            case State.Alert: HandleAlert(); break;
+            case State.Catch: HandleCatch(); break;
         }
     }
 
+    /* ================= NOISE ================= */
+
     private void HandleNoise(NoiseInfo noise)
     {
-        // Ignore noise saat sedang mengejar
         if (state == State.Catch) return;
-
-        // CRITICAL: Check room ID - hanya dengar noise dari room yang sama
-        if (!string.IsNullOrEmpty(noise.roomID) && !string.IsNullOrEmpty(roomID))
-        {
-            if (noise.roomID != roomID)
-            {
-                Debug.Log($"[Enemy] Ignored noise from different room: {noise.roomID} (my room: {roomID})");
-                return;
-            }
-        }
+        if (!string.IsNullOrEmpty(noise.roomID) && noise.roomID != roomID) return;
 
         float distance = Vector2.Distance(transform.position, noise.position);
-        
-        // Tentukan hearing distance berdasarkan tipe noise
-        float maxHearingDistance = noise.type == NoiseType.DogBark ? barkHearingDistance : puzzleHearingDistance;
-        
-        // Check hearing distance
-        if (distance > maxHearingDistance)
-        {
-            Debug.Log($"[Enemy] Noise too far: {distance:F2} > {maxHearingDistance:F2}");
-            return;
-        }
-
-        Debug.Log($"[Enemy] Heard {noise.type} at distance {distance:F2} in room {roomID}");
+        float maxDist = noise.type == NoiseType.DogBark ? barkHearingDistance : puzzleHearingDistance;
+        if (distance > maxDist) return;
 
         if (noise.type == NoiseType.DogBark)
         {
@@ -203,914 +261,362 @@ public class Enemy : MonoBehaviour
 
         if (noise.type == NoiseType.Puzzle)
         {
-            // Skip puzzle noise jika baru saja ada bark
-            bool barkRecently = (Time.time - lastBarkTime) <= barkBlockWindow;
-            
-            if (barkRecently)
-            {
-                Debug.Log("[Enemy] Puzzle ignored - bark happened recently");
-                return;
-            }
-            
-            if (state == State.Alert)
-            {
-                Debug.Log("[Enemy] Puzzle ignored - currently in Alert state");
-                return;
-            }
+            if (Time.time - lastBarkTime <= barkBlockWindow) return;
+            if (state == State.Alert) return;
 
-            // Cari posisi investigate terbaik di sekitar puzzle
-            investigateTarget = FindBestInvestigatePosition(noise.position);
-            
-            Debug.Log($"[Enemy] Investigate target: {investigateTarget} (puzzle at {noise.position})");
-            
-            // Generate path jika pathfinding enabled
-            if (usePathfinding && GridPathfinding.Instance != null)
-            {
-                Debug.Log("[Enemy] Using pathfinding to investigate");
-                currentPath = GridPathfinding.Instance.FindPath(transform.position, investigateTarget);
-                currentPathIndex = 0;
-                
-                if (currentPath != null && currentPath.Count > 0)
-                {
-                    Debug.Log($"[Enemy] Path generated with {currentPath.Count} waypoints");
-                    
-                    // Debug visualization
-                    GridPathfinding.Instance.SetDebugPath(currentPath);
-                }
-                else
-                {
-                    Debug.LogWarning("[Enemy] Path generation failed! Falling back to direct movement");
-                    currentPath = null;
-                }
-            }
-            else
-            {
-                if (!usePathfinding)
-                {
-                    Debug.Log("[Enemy] Pathfinding disabled, using direct movement");
-                }
-                else if (GridPathfinding.Instance == null)
-                {
-                    Debug.LogError("[Enemy] GridPathfinding.Instance is NULL! Make sure PathfindingManager exists in scene");
-                }
-                currentPath = null;
-            }
-            
+            investigateTarget = noise.position;
+            GeneratePath(investigateTarget);
             ChangeState(State.Investigate);
         }
     }
+
+    /* ================= STATES ================= */
 
     private void ChangeState(State newState)
     {
         if (state == newState) return;
 
-        // Exit current state
-        switch (state)
+        // Simpan posisi patrol saat keluar dari patrol
+        if (state == State.Patrol && GridPathfinding.Instance != null)
         {
-            case State.Waiting:
-                rotationDirection = 1f; // Reset rotation
-                break;
-            case State.Patrol:
-                // Simpan posisi terakhir saat masih patrol
-                if (GridPathfinding.Instance != null && GridPathfinding.Instance.obstacleTilemap != null)
-                {
-                    lastPatrolCell = GridPathfinding.Instance.obstacleTilemap.WorldToCell(transform.position);
-                }
-                break;
+            lastPatrolCell = GridPathfinding.Instance.obstacleTilemap
+                .WorldToCell(transform.position);
         }
 
         state = newState;
         stateTimer = 0f;
 
-        // Enter new state
-        switch (newState)
+        if (newState == State.Catch)
         {
-            case State.Alert:
-                if (alertDirection != Vector2.zero)
-                {
-                    FaceDirection(alertDirection);
-                }
-                break;
-
-            case State.Catch:
-                Debug.Log($"[Enemy] Chasing player!");
-                isReturningToPatrol = false;
-                lastChasePathUpdate = 0f; // Reset timer untuk immediate path generation
-                losePlayerTimer = 0f; // Reset lose player timer
-                break;
+            losePlayerTimer = 0f;
+            lastChasePathUpdate = chasePathUpdateInterval;
         }
     }
 
     private void HandlePatrol()
     {
-        if (patrolPoints == null || patrolPoints.Length == 0) return;
-
-        Vector2 targetPos = patrolPoints[patrolIndex].position;
-        Vector2 currentPos = transform.position;
-
-        // Gunakan pathfinding untuk patrol jika enabled
-        if (usePathfindingForPatrol && usePathfinding && GridPathfinding.Instance != null)
+        if (patrolPoints.Length == 0)
         {
-            // Generate path ke patrol point jika belum ada
-            if (currentPath == null || currentPath.Count == 0 || !isReturningToPatrol)
+            Debug.LogWarning($"[Enemy {gameObject.name}] No patrol points assigned!");
+            return;
+        }
+
+        // Pastikan ada path yang valid
+        if (currentPath == null || currentPath.Count == 0)
+        {
+            Debug.Log($"[Enemy {gameObject.name}] No path, generating new path to patrol point {patrolIndex}");
+            GeneratePath(patrolPoints[patrolIndex].position);
+            
+            // Jika masih gagal generate path, skip ke patrol point berikutnya
+            if (currentPath == null || currentPath.Count == 0)
             {
-                // Check jika ini first time atau baru ganti target patrol point
-                bool needNewPath = currentPath == null || currentPath.Count == 0;
-                
-                // Atau jika path yang ada bukan menuju patrol point saat ini
-                if (currentPath != null && currentPath.Count > 0)
-                {
-                    Vector2 pathEnd = currentPath[currentPath.Count - 1];
-                    float distToTarget = Vector2.Distance(pathEnd, targetPos);
-                    if (distToTarget > 0.5f)
-                    {
-                        needNewPath = true;
-                    }
-                }
-
-                if (needNewPath)
-                {
-                    currentPath = GridPathfinding.Instance.FindPath(currentPos, targetPos);
-                    currentPathIndex = 0;
-                    isReturningToPatrol = false;
-
-                    if (currentPath != null && currentPath.Count > 0)
-                    {
-                        if (Time.frameCount % 60 == 0)
-                        {
-                            Debug.Log($"[Enemy] Patrol path to point {patrolIndex}: {currentPath.Count} waypoints");
-                        }
-                        GridPathfinding.Instance.SetDebugPath(currentPath);
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"[Enemy] Failed to generate patrol path to point {patrolIndex}, using direct movement");
-                        currentPath = null;
-                    }
-                }
+                Debug.LogError($"[Enemy {gameObject.name}] Failed to generate path! Skipping to next patrol point.");
+                patrolIndex = (patrolIndex + 1) % patrolPoints.Length;
+                stateTimer = 0f;
             }
+            return;
+        }
 
-            // Follow path jika ada
-            if (currentPath != null && currentPath.Count > 0)
+        // Follow path menggunakan pathfinding
+        if (currentPathIndex < currentPath.Count)
+        {
+            Vector2 targetWaypoint = currentPath[currentPathIndex];
+            MoveTowards(targetWaypoint);
+
+            // Check apakah sudah sampai waypoint
+            if (Vector2.Distance(transform.position, targetWaypoint) <= WAYPOINT_REACH_DISTANCE)
             {
-                if (currentPathIndex < currentPath.Count)
-                {
-                    Vector2 targetWaypoint = currentPath[currentPathIndex];
-                    float distanceToWaypoint = Vector2.Distance(currentPos, targetWaypoint);
-
-                    if (distanceToWaypoint <= 0.3f)
-                    {
-                        currentPathIndex++;
-                    }
-                    else
-                    {
-                        Vector2 direction = (targetWaypoint - currentPos).normalized;
-                        if (direction.sqrMagnitude > 0.01f)
-                        {
-                            FaceDirection(direction);
-                        }
-                        MoveTowards(targetWaypoint);
-                    }
-                }
+                currentPathIndex++;
                 
-                // Check apakah sudah sampai di patrol point
-                float distToPatrolPoint = Vector2.Distance(currentPos, targetPos);
-                if (distToPatrolPoint < 0.2f)
+                // Jika sudah sampai akhir path (patrol point)
+                if (currentPathIndex >= currentPath.Count)
                 {
-                    Debug.Log($"[Enemy] Reached patrol point {patrolIndex}");
+                    Debug.Log($"[Enemy {gameObject.name}] Reached patrol point {patrolIndex}");
                     patrolIndex = (patrolIndex + 1) % patrolPoints.Length;
-                    currentPath = null; // Clear path untuk generate baru ke next point
                     ChangeState(State.Waiting);
                 }
-            }
-            else
-            {
-                // Fallback ke direct movement jika path gagal
-                DirectPatrolMovement(targetPos, currentPos);
             }
         }
         else
         {
-            // Direct patrol movement (tanpa pathfinding)
-            DirectPatrolMovement(targetPos, currentPos);
-        }
-    }
-
-    private void DirectPatrolMovement(Vector2 targetPos, Vector2 currentPos)
-    {
-        // Hadapkan ke target sebelum bergerak
-        Vector2 direction = (targetPos - currentPos).normalized;
-        if (direction.sqrMagnitude > 0.01f)
-        {
-            FaceDirection(direction);
-        }
-        
-        MoveTowards(targetPos);
-
-        if (Vector2.Distance(currentPos, targetPos) < 0.1f)
-        {
-            patrolIndex = (patrolIndex + 1) % patrolPoints.Length;
-            ChangeState(State.Waiting);
+            // Path habis tapi belum sampai, regenerate path
+            Debug.LogWarning($"[Enemy {gameObject.name}] Path exhausted, regenerating...");
+            GeneratePath(patrolPoints[patrolIndex].position);
         }
     }
 
     private void HandleWaiting()
     {
         stateTimer += Time.deltaTime;
+        animator?.SetBool(animIsMovingParam, false);
 
-        // Rotasi vision cone kiri-kanan
-        float rotationAmount = rotationSpeed * rotationDirection * Time.deltaTime;
-        transform.Rotate(0, 0, rotationAmount);
-
-        // Ganti arah rotasi setiap 0.5 detik untuk efek bolak-balik
-        if (stateTimer % 1f < Time.deltaTime)
-        {
-            rotationDirection *= -1f;
-        }
+        if (fovVisual != null)
+            fovVisual.transform.Rotate(0, 0, rotationSpeed * rotationDirection * Time.deltaTime);
 
         if (stateTimer >= waitTime)
         {
+            // Generate path ke patrol point berikutnya
+            GeneratePath(patrolPoints[patrolIndex].position);
             ChangeState(State.Patrol);
         }
     }
 
     private void HandleInvestigate()
     {
-        Vector2 currentPos = transform.position;
-        
-        // Jika pakai pathfinding dan ada path
-        if (usePathfinding && currentPath != null && currentPath.Count > 0)
+        if (currentPath == null || currentPath.Count == 0)
         {
-            // Cek apakah sudah sampai di akhir path
-            if (currentPathIndex >= currentPath.Count)
-            {
-                // Sudah sampai di akhir path
-                if (isReturningToPatrol)
-                {
-                    // Sudah kembali ke posisi patrol, lanjutkan patrol
-                    Debug.Log("[Enemy] Returned to patrol position, resuming patrol");
-                    currentPath = null;
-                    isReturningToPatrol = false;
-                    ChangeState(State.Patrol);
-                    return;
-                }
-                else
-                {
-                    // Sampai di lokasi investigate, tunggu sebentar
-                    stateTimer += Time.deltaTime;
-                    
-                    if (Time.frameCount % 30 == 0)
-                    {
-                        Debug.Log($"[Enemy] At investigate location, waiting... {stateTimer:F1}/{investigateWaitTime}");
-                    }
+            // Tidak ada path, tunggu sebentar lalu return
+            stateTimer += Time.deltaTime;
+            animator?.SetBool(animIsMovingParam, false);
+            
+            if (stateTimer >= investigateWaitTime)
+                ReturnToPatrol();
+            return;
+        }
 
-                    // Rotasi pelan saat waiting
-                    transform.Rotate(0, 0, 30f * Time.deltaTime);
-
-                    if (stateTimer >= investigateWaitTime)
-                    {
-                        Debug.Log("[Enemy] Investigation complete, returning to last patrol position");
-                        ReturnToPatrol();
-                    }
-                    return;
-                }
-            }
-
-            // Masih ada waypoint yang harus dituju
+        // Follow path
+        if (currentPathIndex < currentPath.Count)
+        {
             Vector2 targetWaypoint = currentPath[currentPathIndex];
-            float distanceToWaypoint = Vector2.Distance(currentPos, targetWaypoint);
+            MoveTowards(targetWaypoint);
 
-            // Debug setiap beberapa frame
-            if (Time.frameCount % 30 == 0)
+            if (Vector2.Distance(transform.position, targetWaypoint) <= WAYPOINT_REACH_DISTANCE)
             {
-                Debug.Log($"[Enemy] Following path: waypoint {currentPathIndex}/{currentPath.Count}, distance: {distanceToWaypoint:F2}, returning: {isReturningToPatrol}");
-            }
-
-            if (distanceToWaypoint <= 0.3f)
-            {
-                // Pindah ke waypoint berikutnya
                 currentPathIndex++;
-                Debug.Log($"[Enemy] Reached waypoint {currentPathIndex - 1}, moving to next (now {currentPathIndex}/{currentPath.Count})");
-            }
-            else
-            {
-                // Bergerak ke waypoint saat ini
-                Vector2 direction = (targetWaypoint - currentPos).normalized;
-                if (direction.sqrMagnitude > 0.01f)
-                {
-                    FaceDirection(direction);
-                }
-                MoveTowards(targetWaypoint);
             }
         }
         else
         {
-            // Fallback ke direct movement (tanpa pathfinding)
-            float distance = Vector2.Distance(currentPos, investigateTarget);
-
-            if (distance <= investigateStopDistance)
-            {
-                stateTimer += Time.deltaTime;
-
-                // Rotasi pelan saat menunggu di lokasi investigate
-                transform.Rotate(0, 0, 30f * Time.deltaTime);
-
-                if (stateTimer >= investigateWaitTime)
-                {
-                    Debug.Log("[Enemy] Investigation complete, returning to patrol");
-                    ChangeState(State.Patrol);
-                }
-            }
-            else
-            {
-                // Face direction saat bergerak
-                Vector2 direction = (investigateTarget - currentPos).normalized;
-                if (direction.sqrMagnitude > 0.01f)
-                {
-                    FaceDirection(direction);
-                }
-                
-                MoveTowards(investigateTarget);
-            }
-        }
-    }
-
-    private void ReturnToPatrol()
-    {
-        if (usePathfinding && GridPathfinding.Instance != null && lastPatrolCell != Vector3Int.zero)
-        {
-            // Generate path kembali ke posisi patrol terakhir
-            Vector2 lastPatrolWorld = GridPathfinding.Instance.obstacleTilemap.GetCellCenterWorld(lastPatrolCell);
+            // Sampai di tujuan investigate, tunggu sebentar
+            stateTimer += Time.deltaTime;
+            animator?.SetBool(animIsMovingParam, false);
             
-            Debug.Log($"[Enemy] Generating return path to last patrol position: {lastPatrolWorld}");
-            
-            currentPath = GridPathfinding.Instance.FindPath(transform.position, lastPatrolWorld);
-            currentPathIndex = 0;
-            isReturningToPatrol = true; // Set flag
-            
-            if (currentPath != null && currentPath.Count > 0)
-            {
-                Debug.Log($"[Enemy] Return path generated with {currentPath.Count} waypoints");
-                GridPathfinding.Instance.SetDebugPath(currentPath);
-                
-                // Reset timer untuk proses return
-                stateTimer = 0f;
-            }
-            else
-            {
-                Debug.LogWarning("[Enemy] Failed to generate return path, switching to Patrol");
-                currentPath = null;
-                isReturningToPatrol = false;
-                ChangeState(State.Patrol);
-            }
-        }
-        else
-        {
-            // Fallback: langsung kembali ke state Patrol
-            Debug.Log("[Enemy] No pathfinding or last position, switching to Patrol");
-            currentPath = null;
-            isReturningToPatrol = false;
-            ChangeState(State.Patrol);
+            if (stateTimer >= investigateWaitTime)
+                ReturnToPatrol();
         }
     }
 
     private void HandleAlert()
     {
         stateTimer += Time.deltaTime;
-
-        // Rotasi pelan untuk "scanning" area
-        transform.Rotate(0, 0, alertRotationSpeed * Time.deltaTime);
+        animator?.SetBool(animIsMovingParam, false);
+        fovVisual?.transform.Rotate(0, 0, alertRotationSpeed * Time.deltaTime);
 
         if (stateTimer >= alertDuration)
-        {
-            Debug.Log("[Enemy] Alert ended, returning to patrol");
-            ChangeState(State.Patrol);
-        }
+            ReturnToPatrol();
     }
 
     private void HandleCatch()
     {
         if (player == null || !player.isAlive) return;
 
-        Vector2 playerPos = player.transform.position;
-        Vector2 currentPos = transform.position;
-        float distanceToPlayer = Vector2.Distance(currentPos, playerPos);
-
-        // Check apakah player tertangkap
-        if (distanceToPlayer < catchDistance)
+        float dist = Vector2.Distance(transform.position, player.transform.position);
+        
+        // Tangkap player jika sudah dekat
+        if (dist <= catchDistance)
         {
             CatchPlayer();
             return;
         }
 
-        // Check apakah player terlalu jauh (melebihi max chase distance)
-        if (distanceToPlayer > maxChaseDistance)
+        // Terlalu jauh, return to patrol
+        if (dist > maxChaseDistance)
         {
-            Debug.Log($"[Enemy] Player too far ({distanceToPlayer:F1}m > {maxChaseDistance}m), returning to patrol");
-            currentPath = null;
-            ReturnToPatrolFromChase();
+            ReturnToPatrol();
             return;
         }
 
-        // Check apakah player masih terlihat
-        bool canSeePlayerNow = CanSeePlayer();
-        
-        if (!canSeePlayerNow || player.isHidden)
+        // Update lose player timer
+        losePlayerTimer = CanSeePlayer() ? 0f : losePlayerTimer + Time.deltaTime;
+        if (losePlayerTimer >= losePlayerTimeout)
         {
-            // Player tidak terlihat, mulai hitung timer
-            losePlayerTimer += Time.deltaTime;
-            
-            if (Time.frameCount % 30 == 0)
-            {
-                Debug.Log($"[Enemy] Lost sight of player... {losePlayerTimer:F1}/{losePlayerTimeout}s");
-            }
-
-            if (losePlayerTimer >= losePlayerTimeout)
-            {
-                Debug.Log("[Enemy] Player lost for too long, returning to patrol");
-                currentPath = null;
-                ReturnToPatrolFromChase();
-                return;
-            }
-            
-            // Masih dalam timeout, terus chase ke posisi terakhir
-        }
-        else
-        {
-            // Player masih terlihat, reset timer
-            losePlayerTimer = 0f;
+            ReturnToPatrol();
+            return;
         }
 
-        // Pathfinding chase
-        if (usePathfinding && GridPathfinding.Instance != null)
+        // Update path secara berkala
+        lastChasePathUpdate += Time.deltaTime;
+        if (lastChasePathUpdate >= chasePathUpdateInterval)
         {
-            // Update path secara periodik (player bergerak terus)
-            lastChasePathUpdate += Time.deltaTime;
-            
-            if (currentPath == null || lastChasePathUpdate >= chasePathUpdateInterval)
-            {
-                lastChasePathUpdate = 0f;
-                
-                // Generate path ke posisi player
-                currentPath = GridPathfinding.Instance.FindPath(currentPos, playerPos);
-                currentPathIndex = 0;
-                
-                if (currentPath != null && currentPath.Count > 0)
-                {
-                    if (Time.frameCount % 60 == 0)
-                    {
-                        Debug.Log($"[Enemy] Chase path updated: {currentPath.Count} waypoints");
-                    }
-                    GridPathfinding.Instance.SetDebugPath(currentPath);
-                }
-                else
-                {
-                    Debug.LogWarning("[Enemy] Failed to generate chase path, using direct chase");
-                    currentPath = null;
-                }
-            }
-
-            // Follow path jika ada
-            if (currentPath != null && currentPath.Count > 0)
-            {
-                if (currentPathIndex < currentPath.Count)
-                {
-                    Vector2 targetWaypoint = currentPath[currentPathIndex];
-                    float distanceToWaypoint = Vector2.Distance(currentPos, targetWaypoint);
-
-                    if (distanceToWaypoint <= 0.3f)
-                    {
-                        currentPathIndex++;
-                    }
-                    else
-                    {
-                        Vector2 direction = (targetWaypoint - currentPos).normalized;
-                        if (direction.sqrMagnitude > 0.01f)
-                        {
-                            FaceDirection(direction);
-                        }
-                        MoveTowards(targetWaypoint);
-                    }
-                }
-                else
-                {
-                    // Sampai akhir path tapi belum tangkap player
-                    // Force update path di frame berikutnya
-                    lastChasePathUpdate = chasePathUpdateInterval;
-                }
-            }
-            else
-            {
-                // Fallback: direct chase jika path gagal
-                DirectChasePlayer(playerPos, currentPos);
-            }
+            GeneratePath(player.transform.position);
+            lastChasePathUpdate = 0f;
         }
-        else
+
+        // Follow path ke player
+        if (currentPath != null && currentPathIndex < currentPath.Count)
         {
-            // Tanpa pathfinding: direct chase
-            DirectChasePlayer(playerPos, currentPos);
+            Vector2 targetWaypoint = currentPath[currentPathIndex];
+            MoveTowards(targetWaypoint);
+
+            if (Vector2.Distance(transform.position, targetWaypoint) <= WAYPOINT_REACH_DISTANCE)
+            {
+                currentPathIndex++;
+            }
         }
     }
 
-    private void ReturnToPatrolFromChase()
-    {
-        // Sama seperti return dari investigate, tapi dari chase
-        if (usePathfinding && GridPathfinding.Instance != null && lastPatrolCell != Vector3Int.zero)
-        {
-            Vector2 lastPatrolWorld = GridPathfinding.Instance.obstacleTilemap.GetCellCenterWorld(lastPatrolCell);
-            
-            Debug.Log($"[Enemy] Returning to patrol from chase: {lastPatrolWorld}");
-            
-            currentPath = GridPathfinding.Instance.FindPath(transform.position, lastPatrolWorld);
-            currentPathIndex = 0;
-            isReturningToPatrol = true;
-            
-            if (currentPath != null && currentPath.Count > 0)
-            {
-                Debug.Log($"[Enemy] Return path generated with {currentPath.Count} waypoints");
-                GridPathfinding.Instance.SetDebugPath(currentPath);
-                
-                // Ganti ke Investigate state untuk menggunakan return logic yang sudah ada
-                ChangeState(State.Investigate);
-            }
-            else
-            {
-                Debug.LogWarning("[Enemy] Failed to generate return path from chase");
-                currentPath = null;
-                isReturningToPatrol = false;
-                ChangeState(State.Patrol);
-            }
-        }
-        else
-        {
-            Debug.Log("[Enemy] No pathfinding or last position, switching to Patrol");
-            currentPath = null;
-            isReturningToPatrol = false;
-            ChangeState(State.Patrol);
-        }
-    }
-
-    private void DirectChasePlayer(Vector2 playerPos, Vector2 currentPos)
-    {
-        Vector2 direction = (playerPos - currentPos).normalized;
-        if (direction.sqrMagnitude > 0.01f)
-        {
-            FaceDirection(direction);
-        }
-        MoveTowards(playerPos);
-    }
+    /* ================= MOVEMENT ================= */
 
     private void MoveTowards(Vector2 target)
     {
-        Vector2 currentPos = transform.position;
-        Vector2 direction = (target - currentPos).normalized;
-        Vector2 newPos = Vector2.MoveTowards(currentPos, target, moveSpeed * Time.deltaTime);
+        Vector2 pos = rb.position;
+        Vector2 dir = (target - pos).normalized;
+        
+        // Move using rigidbody
+        rb.MovePosition(Vector2.MoveTowards(pos, target, moveSpeed * Time.deltaTime));
+        
+        // Update animation dan FOV
+        UpdateAnimation(dir, true);
+        UpdateFOVDirection(dir);
+    }
 
-        if (rb != null)
+    /* ================= HELPERS ================= */
+
+    private void GeneratePath(Vector2 target)
+    {
+        if (GridPathfinding.Instance == null)
         {
-            rb.MovePosition(newPos);
+            Debug.LogError("[Enemy] GridPathfinding instance not found!");
+            currentPath = null;
+            return;
+        }
+
+        // PENTING: Snap target ke grid center untuk menghindari posisi di antara cell
+        Vector3Int targetCell = GridPathfinding.Instance.obstacleTilemap.WorldToCell(target);
+        Vector2 snappedTarget = GridPathfinding.Instance.obstacleTilemap.GetCellCenterWorld(targetCell);
+        
+        Debug.Log($"[Enemy] Original target: {target}, Snapped to: {snappedTarget} (cell: {targetCell})");
+
+        currentPath = GridPathfinding.Instance.FindPath(transform.position, snappedTarget);
+        currentPathIndex = 0;
+
+        // Debug visualisasi (opsional)
+        if (currentPath != null && currentPath.Count > 0)
+        {
+            GridPathfinding.Instance.SetDebugPath(currentPath);
+            Debug.Log($"[Enemy] Generated path with {currentPath.Count} waypoints");
         }
         else
         {
-            transform.position = newPos;
+            Debug.LogWarning($"[Enemy] Failed to generate path to {snappedTarget}");
         }
-
-        // Face direction saat bergerak
-        if (direction.sqrMagnitude > 0.01f)
-        {
-            FaceDirection(direction);
-        }
-
-        lastPosition = newPos;
     }
 
-    private void FaceDirection(Vector2 direction)
+    private void ReturnToPatrol()
     {
-        if (direction.sqrMagnitude < 0.01f) return;
+        if (GridPathfinding.Instance != null)
+        {
+            // Kembali ke posisi patrol terakhir
+            Vector2 pos = GridPathfinding.Instance.obstacleTilemap
+                .GetCellCenterWorld(lastPatrolCell);
+            GeneratePath(pos);
+            ChangeState(State.Investigate);
+        }
+        else
+        {
+            // Fallback jika tidak ada pathfinding
+            ChangeState(State.Patrol);
+            if (patrolPoints.Length > 0)
+                GeneratePath(patrolPoints[patrolIndex].position);
+        }
+    }
+
+    private void UpdateAnimation(Vector2 dir, bool moving)
+    {
+        if (animator == null) return;
+
+        animator.SetBool(animIsMovingParam, moving);
         
-        direction.Normalize();
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        if (dir.magnitude > 0.01f)
+        {
+            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
+            {
+                animator.SetFloat(animHorizontalParam, Mathf.Sign(dir.x));
+                animator.SetFloat(animVerticalParam, 0);
+            }
+            else
+            {
+                animator.SetFloat(animVerticalParam, Mathf.Sign(dir.y));
+                animator.SetFloat(animHorizontalParam, 0);
+            }
+        }
+    }
+
+    private void UpdateFOVDirection(Vector2 dir)
+    {
+        if (fovVisual != null && dir.magnitude > 0.01f)
+            fovVisual.SetAimDirection(dir);
     }
 
     private void UpdateFOV()
     {
-        if (fovVisual == null) return;
-        
-        fovVisual.SetOrigin(transform.position);
-        fovVisual.SetAimDirection(transform.right);
+        if (fovVisual != null)
+            fovVisual.SetOrigin(transform.position);
     }
 
     private bool CanSeePlayer()
     {
         if (player == null || player.isHidden) return false;
 
-        Vector2 origin = transform.position;
-        Vector2 playerPos = player.transform.position;
-        Vector2 toPlayer = playerPos - origin;
-        float distance = toPlayer.magnitude;
-
-        // Check distance
-        if (distance > viewDistance) return false;
+        Vector2 dir = player.transform.position - transform.position;
+        if (dir.magnitude > viewDistance) return false;
 
         // Check FOV angle
-        float angle = Vector2.Angle(transform.right, toPlayer);
-        if (angle > fov * 0.5f) return false;
+        Vector2 facingDir = fovVisual != null ? 
+            (Vector2)fovVisual.transform.right : Vector2.right;
+        
+        if (Vector2.Angle(facingDir, dir) > fov * 0.5f) return false;
 
-        // Check obstacles dengan raycast
-        RaycastHit2D hit = Physics2D.Raycast(
-            origin,
-            toPlayer.normalized,
-            distance,
-            obstacleMask
-        );
-
-        return hit.collider == null;
+        // Raycast check untuk obstacle
+        return !Physics2D.Raycast(transform.position, dir.normalized, dir.magnitude, obstacleMask);
     }
 
     private void CatchPlayer()
     {
-        if (player == null || !player.isAlive) return;
-
         player.isAlive = false;
-        Debug.Log("[Enemy] GAME OVER - Player Caught!");
-        
-        // Opsional: Tambahkan event atau method game over disini
         Time.timeScale = 0f;
+        Debug.Log("[Enemy] Player caught!");
     }
 
-    private Vector2 FindBestInvestigatePosition(Vector2 puzzlePos)
-    {
-        Vector2 enemyPos = transform.position;
-        
-        // Jika tidak ada pathfinding, return posisi puzzle langsung
-        if (!usePathfinding || GridPathfinding.Instance == null || GridPathfinding.Instance.obstacleTilemap == null)
-        {
-            return puzzlePos;
-        }
-
-        Tilemap tilemap = GridPathfinding.Instance.obstacleTilemap;
-        
-        // Kandidat posisi: kiri, kanan, atas, bawah dari puzzle
-        Vector2[] candidates = new Vector2[]
-        {
-            new Vector2(puzzlePos.x - investigateOffset, puzzlePos.y), // Kiri
-            new Vector2(puzzlePos.x + investigateOffset, puzzlePos.y), // Kanan
-            new Vector2(puzzlePos.x, puzzlePos.y + investigateOffset), // Atas
-            new Vector2(puzzlePos.x, puzzlePos.y - investigateOffset), // Bawah
-        };
-
-        Vector2 bestPosition = puzzlePos;
-        float bestScore = float.MaxValue;
-
-        foreach (Vector2 candidate in candidates)
-        {
-            Vector3Int cell = tilemap.WorldToCell(candidate);
-            
-            // Skip jika posisi ada obstacle
-            if (tilemap.HasTile(cell))
-            {
-                continue;
-            }
-
-            // Score = jarak dari enemy ke kandidat (lebih dekat = lebih baik)
-            float distanceFromEnemy = Vector2.Distance(enemyPos, candidate);
-            
-            if (distanceFromEnemy < bestScore)
-            {
-                bestScore = distanceFromEnemy;
-                bestPosition = candidate;
-            }
-        }
-
-        // Jika semua kandidat terblokir, cari nearest free cell
-        if (bestScore == float.MaxValue)
-        {
-            Debug.LogWarning("[Enemy] All investigate positions blocked, finding nearest free cell");
-            Vector3Int puzzleCell = tilemap.WorldToCell(puzzlePos);
-            Vector3Int freeCell = FindNearestFreeCell(puzzleCell, tilemap);
-            bestPosition = tilemap.GetCellCenterWorld(freeCell);
-        }
-
-        return bestPosition;
-    }
-
-    private Vector3Int FindNearestFreeCell(Vector3Int startCell, Tilemap tilemap)
-    {
-        // BFS untuk cari cell kosong terdekat
-        Queue<Vector3Int> queue = new Queue<Vector3Int>();
-        HashSet<Vector3Int> visited = new HashSet<Vector3Int>();
-        
-        queue.Enqueue(startCell);
-        visited.Add(startCell);
-
-        // Directions: kiri, kanan, atas, bawah
-        Vector3Int[] directions = new Vector3Int[]
-        {
-            Vector3Int.left,
-            Vector3Int.right,
-            Vector3Int.up,
-            Vector3Int.down
-        };
-
-        int maxIterations = 50; // Prevent infinite loop
-        int iterations = 0;
-
-        while (queue.Count > 0 && iterations < maxIterations)
-        {
-            iterations++;
-            Vector3Int current = queue.Dequeue();
-            
-            // Jika cell ini kosong, return
-            if (!tilemap.HasTile(current))
-            {
-                return current;
-            }
-
-            // Check neighbors
-            foreach (Vector3Int dir in directions)
-            {
-                Vector3Int neighbor = current + dir;
-                
-                if (!visited.Contains(neighbor))
-                {
-                    visited.Add(neighbor);
-                    queue.Enqueue(neighbor);
-                }
-            }
-        }
-
-        // Fallback: return start cell
-        return startCell;
-    }
-
-    // Debug visualization
+    // Gizmos untuk debug
     private void OnDrawGizmos()
     {
-        if (!Application.isPlaying) return;
-
-        // Draw patrol path
-        if (patrolPoints != null && patrolPoints.Length > 1)
+        // Draw patrol points
+        if (patrolPoints != null && patrolPoints.Length > 0)
         {
-            Gizmos.color = Color.yellow;
+            Gizmos.color = Color.green;
             for (int i = 0; i < patrolPoints.Length; i++)
             {
-                int next = (i + 1) % patrolPoints.Length;
-                if (patrolPoints[i] != null && patrolPoints[next] != null)
+                if (patrolPoints[i] != null)
                 {
-                    Gizmos.DrawLine(patrolPoints[i].position, patrolPoints[next].position);
+                    Gizmos.DrawWireSphere(patrolPoints[i].position, 0.3f);
+                    
+                    // Draw line ke next point
+                    int nextIndex = (i + 1) % patrolPoints.Length;
+                    if (patrolPoints[nextIndex] != null)
+                    {
+                        Gizmos.DrawLine(patrolPoints[i].position, 
+                                       patrolPoints[nextIndex].position);
+                    }
                 }
             }
         }
 
-        // Draw current patrol path (pathfinding)
-        if (state == State.Patrol)
-        {
-            if (currentPath != null && currentPath.Count > 0)
-            {
-                // Cyan path untuk patrol dengan pathfinding
-                Gizmos.color = Color.cyan;
-                for (int i = 0; i < currentPath.Count - 1; i++)
-                {
-                    Gizmos.DrawLine(currentPath[i], currentPath[i + 1]);
-                }
-                
-                // Current waypoint
-                if (currentPathIndex < currentPath.Count)
-                {
-                    Gizmos.color = Color.white;
-                    Gizmos.DrawWireSphere(currentPath[currentPathIndex], 0.15f);
-                }
-            }
-            
-            // Draw target patrol point
-            if (patrolPoints != null && patrolIndex < patrolPoints.Length)
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawWireSphere(patrolPoints[patrolIndex].position, 0.25f);
-            }
-        }
-
-        // Draw investigate target
-        if (state == State.Investigate)
-        {
-            // Draw path jika ada
-            if (currentPath != null && currentPath.Count > 0)
-            {
-                // Warna berbeda untuk return path vs investigate path
-                Gizmos.color = isReturningToPatrol ? Color.green : Color.magenta;
-                
-                for (int i = 0; i < currentPath.Count - 1; i++)
-                {
-                    Gizmos.DrawLine(currentPath[i], currentPath[i + 1]);
-                }
-                
-                // Highlight current waypoint
-                if (currentPathIndex < currentPath.Count)
-                {
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawWireSphere(currentPath[currentPathIndex], 0.2f);
-                }
-            }
-            
-            // Draw investigate target (hanya jika belum return)
-            if (!isReturningToPatrol)
-            {
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawWireSphere(investigateTarget, investigateStopDistance);
-            }
-            
-            // Draw last patrol position
-            if (lastPatrolCell != Vector3Int.zero && GridPathfinding.Instance != null)
-            {
-                Vector2 lastPatrolWorld = GridPathfinding.Instance.obstacleTilemap.GetCellCenterWorld(lastPatrolCell);
-                Gizmos.color = Color.blue;
-                Gizmos.DrawWireSphere(lastPatrolWorld, 0.3f);
-            }
-        }
-
-        // Draw chase path
-        if (state == State.Catch)
-        {
-            if (currentPath != null && currentPath.Count > 0)
-            {
-                // Red path untuk chase
-                Gizmos.color = Color.red;
-                for (int i = 0; i < currentPath.Count - 1; i++)
-                {
-                    Gizmos.DrawLine(currentPath[i], currentPath[i + 1]);
-                }
-                
-                // Current waypoint
-                if (currentPathIndex < currentPath.Count)
-                {
-                    Gizmos.color = new Color(1f, 0.5f, 0f); // Orange
-                    Gizmos.DrawWireSphere(currentPath[currentPathIndex], 0.2f);
-                }
-            }
-            
-            // Draw line to player
-            if (player != null)
-            {
-                float distToPlayer = Vector2.Distance(transform.position, player.transform.position);
-                
-                // Warna berubah jika player hampir keluar dari max chase distance
-                if (distToPlayer > maxChaseDistance * 0.8f)
-                {
-                    Gizmos.color = new Color(1f, 0.5f, 0f, 0.5f); // Orange warning
-                }
-                else
-                {
-                    Gizmos.color = new Color(1f, 0f, 0f, 0.3f); // Transparent red
-                }
-                
-                Gizmos.DrawLine(transform.position, player.transform.position);
-            }
-            
-            // Draw max chase distance circle
-            Gizmos.color = new Color(1f, 0f, 0f, 0.2f);
-            Gizmos.DrawWireSphere(transform.position, maxChaseDistance);
-        }
-
-        // Draw vision range (FOV - hijau)
-        Gizmos.color = state == State.Catch ? Color.red : Color.green;
-        Gizmos.DrawWireSphere(transform.position, viewDistance);
-        
-        // Draw bark hearing range (kuning transparan) - hanya jika wajar
-        if (barkHearingDistance < 50f)
-        {
-            Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
-            Gizmos.DrawWireSphere(transform.position, barkHearingDistance);
-        }
-    }
-    
-    private void OnDrawGizmosSelected()
-    {
-        // Draw bark hearing range
-        if (barkHearingDistance < 50f)
+        // Draw current path
+        if (Application.isPlaying && currentPath != null && currentPath.Count > 0)
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, barkHearingDistance);
+            for (int i = 0; i < currentPath.Count - 1; i++)
+            {
+                Gizmos.DrawLine(currentPath[i], currentPath[i + 1]);
+            }
             
-            UnityEditor.Handles.Label(
-                transform.position + Vector3.up * barkHearingDistance, 
-                $"Bark Hearing: {barkHearingDistance}m"
-            );
+            // Draw current waypoint target
+            if (currentPathIndex < currentPath.Count)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireSphere(currentPath[currentPathIndex], 0.2f);
+            }
         }
-        
-        // Draw vision range
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, viewDistance);
-        
-        UnityEditor.Handles.Label(
-            transform.position + Vector3.up * viewDistance, 
-            $"Vision: {viewDistance}m"
-        );
-        
-        // Info puzzle hearing
-        UnityEditor.Handles.Label(
-            transform.position + Vector3.down * 0.5f, 
-            $"Puzzle: {(puzzleHearingDistance > 100f ? "Unlimited" : puzzleHearingDistance + "m")}"
-        );
     }
 }
