@@ -14,6 +14,8 @@ public class UIManager : MonoBehaviour
     public GameObject CreditsPanel;
     public GameObject InGamePanel;
     public GameObject PausePanel;
+    public GameObject WinPanel;
+    public GameObject GameOverPanel;
     
     [Header("Skill Cooldown UI")]
     [SerializeField] private Image skillCooldownImage;
@@ -155,6 +157,18 @@ public class UIManager : MonoBehaviour
         {
             Debug.Log("Skill on cooldown");
         }
+    }
+
+    public void GameOverPanelUI()
+    { 
+        GameOverPanel.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    public void WinPanelUI()
+    {
+        WinPanel.SetActive(true);
+        Time.timeScale = 0f;
     }
 
 }

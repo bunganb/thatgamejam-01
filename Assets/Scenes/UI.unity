@@ -630,6 +630,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   state: 0
   player: {fileID: 1145902917}
+  roomID: Room3
   fovPrefab: {fileID: 9159514687809510213, guid: 1e1923cc6c61ff14ba8c99b7f854f4b6, type: 3}
   patrolPoints:
   - {fileID: 1071061376}
@@ -23971,6 +23972,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 1
   controller: {fileID: 699293326}
+  roomID: Room2
   ui: {fileID: 655836593}
 --- !u!61 &217588256
 BoxCollider2D:
@@ -25437,6 +25439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DogBarkController
   barkDuration: 1.5
+  roomID: Room1
   movement: {fileID: 515183388}
 --- !u!114 &515183388
 MonoBehaviour:
@@ -25815,6 +25818,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   state: 0
   player: {fileID: 1145902917}
+  roomID: Room3
   fovPrefab: {fileID: 9159514687809510213, guid: 1e1923cc6c61ff14ba8c99b7f854f4b6, type: 3}
   patrolPoints:
   - {fileID: 1029766813}
@@ -25965,6 +25969,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 4
   controller: {fileID: 699293326}
+  roomID: Room2
   ui: {fileID: 1585050139}
 --- !u!61 &550618856
 BoxCollider2D:
@@ -26497,6 +26502,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 4
   controller: {fileID: 1005506318}
+  roomID: Room3
   ui: {fileID: 248065107}
 --- !u!61 &586055286
 BoxCollider2D:
@@ -27298,6 +27304,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   state: 0
   player: {fileID: 1145902917}
+  roomID: Room1
   fovPrefab: {fileID: 9159514687809510213, guid: 1e1923cc6c61ff14ba8c99b7f854f4b6, type: 3}
   patrolPoints:
   - {fileID: 1612758742}
@@ -27690,6 +27697,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   state: 0
   player: {fileID: 1145902917}
+  roomID: Room2
   fovPrefab: {fileID: 9159514687809510213, guid: 1e1923cc6c61ff14ba8c99b7f854f4b6, type: 3}
   patrolPoints:
   - {fileID: 2107952267}
@@ -29479,6 +29487,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 1
   controller: {fileID: 1005506318}
+  roomID: Room3
   ui: {fileID: 530331976}
 --- !u!61 &1094005147
 BoxCollider2D:
@@ -29690,6 +29699,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   state: 0
   player: {fileID: 1145902917}
+  roomID: Room3
   fovPrefab: {fileID: 9159514687809510213, guid: 1e1923cc6c61ff14ba8c99b7f854f4b6, type: 3}
   patrolPoints:
   - {fileID: 1899501264}
@@ -39325,7 +39335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillController
   cooldown: 5
-  dog: {fileID: 0}
+  dog: {fileID: 515183387}
 --- !u!114 &1145902916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39427,7 +39437,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: -7719095330858985432, guid: a110b396828a1f146a418c213425ed8b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a1990398b3a26334586ee7e61889df77, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -39816,6 +39826,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 2
   controller: {fileID: 1849840732}
+  roomID: Room1
   ui: {fileID: 1404304081}
 --- !u!61 &1212978999
 BoxCollider2D:
@@ -40749,6 +40760,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 3
   controller: {fileID: 699293326}
+  roomID: Room2
   ui: {fileID: 1207995030}
 --- !u!61 &1421868924
 BoxCollider2D:
@@ -41057,6 +41069,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 2
   controller: {fileID: 1005506318}
+  roomID: Room3
   ui: {fileID: 701814424}
 --- !u!61 &1439219562
 BoxCollider2D:
@@ -41380,6 +41393,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 1
   controller: {fileID: 1849840732}
+  roomID: Room1
   ui: {fileID: 932956267}
 --- !u!61 &1477421156
 BoxCollider2D:
@@ -45266,6 +45280,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 3
   controller: {fileID: 1849840732}
+  roomID: Room1
   ui: {fileID: 844738104}
 --- !u!61 &1779481959
 BoxCollider2D:
@@ -45468,6 +45483,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 2
   controller: {fileID: 699293326}
+  roomID: Room2
   ui: {fileID: 1162295007}
 --- !u!61 &1796159103
 BoxCollider2D:
@@ -46215,6 +46231,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 3
   controller: {fileID: 1005506318}
+  roomID: Room3
   ui: {fileID: 1066316292}
 --- !u!61 &1918207074
 BoxCollider2D:
@@ -46583,6 +46600,8 @@ MonoBehaviour:
   CreditsPanel: {fileID: 2145003772}
   InGamePanel: {fileID: 161351923}
   PausePanel: {fileID: 381025227}
+  WinPanel: {fileID: 1541378802}
+  GameOverPanel: {fileID: 686430498}
   skillCooldownImage: {fileID: 1495826235}
   SkillButton: {fileID: 1158187543}
 --- !u!1 &1991377203
@@ -47425,6 +47444,7 @@ MonoBehaviour:
   interactionKey: 3
   stepID: 4
   controller: {fileID: 1849840732}
+  roomID: Room1
   ui: {fileID: 1650161719}
 --- !u!61 &2138870531
 BoxCollider2D:
