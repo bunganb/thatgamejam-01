@@ -575,7 +575,7 @@ public class Enemy : MonoBehaviour
     {
         player.isAlive = false;
         Time.timeScale = 0f;
-        Debug.Log("[Enemy] Player caught!");
+        UIManager.Instance.GameOverPanelUI();
     }
 
     // Gizmos untuk debug

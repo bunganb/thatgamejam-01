@@ -1,30 +1,48 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
+
     [Header("Slider")]
     public Slider sfxVolumeSlider;
     public Slider bgmVolumeSlider;
-    
+
     [Header("AudioSource")]
-    [SerializeField] AudioSource sfxSource;
-    [SerializeField] AudioSource bgmSource;
-   
-    [Header("Audio Clip")]
-    [SerializeField] AudioClip bgmClip;
-    [SerializeField] AudioClip sfxClip;
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioSource bgmSource;
+
+    [Header("BGM")]
+    [SerializeField] private AudioClip bgmClip;
+
+    [Header("SFX List")]
+    [SerializeField] private List<SFXData> sfxList;
+
+    private Dictionary<SFXType, AudioClip> sfxDict;
+
     private void Awake()
     {
         if (Instance == null)
-        {
             Instance = this;
-        }
         else
         {
             Destroy(gameObject);
+            return;
+        }
+
+        InitSFX();
+    }
+
+    private void InitSFX()
+    {
+        sfxDict = new Dictionary<SFXType, AudioClip>();
+
+        foreach (var sfx in sfxList)
+        {
+            if (!sfxDict.ContainsKey(sfx.type))
+                sfxDict.Add(sfx.type, sfx.clip);
         }
     }
 
@@ -41,7 +59,10 @@ public class AudioManager : MonoBehaviour
 
         bgmVolumeSlider.onValueChanged.AddListener(SetBGMVolume);
         sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
+
+        PlayBgm();
     }
+
     public void SetBGMVolume(float volume)
     {
         bgmSource.volume = volume;
@@ -54,16 +75,25 @@ public class AudioManager : MonoBehaviour
         PlayerPrefs.SetFloat("SFXVolume", volume);
     }
 
-    
     public void PlayBgm()
     {
-        bgmSource.clip = bgmClip;
-        bgmSource.loop = true;
-        bgmSource.Play();
+        if (!bgmSource.isPlaying)
+        {
+            bgmSource.clip = bgmClip;
+            bgmSource.loop = true;
+            bgmSource.Play();
+        }
     }
 
-    public void PlaySfx()
+    public void PlaySFX(SFXType type)
     {
-        sfxSource.PlayOneShot(sfxClip);
+        if (sfxDict.TryGetValue(type, out AudioClip clip))
+        {
+            sfxSource.PlayOneShot(clip);
+        }
+        else
+        {
+            Debug.LogWarning($"SFX {type} belum terdaftar");
+        }
     }
 }

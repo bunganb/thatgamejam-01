@@ -80,8 +80,8 @@ public class PaperInteractable : MonoBehaviour, IInteractable
         if (kb == null) return;
 
         if (kb.escapeKey.wasPressedThisFrame ||
-            kb.backspaceKey.wasPressedThisFrame ||
-            kb.eKey.wasPressedThisFrame)
+            kb.backspaceKey.wasPressedThisFrame)
+            
         {
             Close();
         }

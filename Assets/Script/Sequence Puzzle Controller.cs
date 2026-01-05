@@ -30,7 +30,7 @@ public class SequencePuzzleController : MonoBehaviour
         if (inputID == correctSequence[currentIndex])
         {
             currentIndex++;
-
+            AudioManager.Instance.PlaySFX(SFXType.Tombol_Benar);
             if (currentIndex >= correctSequence.Count)
             {
                 PuzzleCompleted();
@@ -40,6 +40,7 @@ public class SequencePuzzleController : MonoBehaviour
         {
             Debug.Log("Wrong input, reset puzzle");
             ResetPuzzle();
+            AudioManager.Instance.PlaySFX(SFXType.Tombol_Salah);
         }
     }
 

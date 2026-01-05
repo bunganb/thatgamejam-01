@@ -9,6 +9,9 @@ public class PlayerMovement : MonoBehaviour
     public bool isHidden;
     public bool isAlive = true;
 
+    [SerializeField] private float footstepInterval = 0.4f;
+    private float footstepTimer;
+
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
@@ -28,7 +31,10 @@ public class PlayerMovement : MonoBehaviour
         ReadInput();
         UpdateAnimation();
         FlipSprite();
+
+        HandleFootstepSFX();
     }
+
 
     private void FixedUpdate()
     {
@@ -58,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
             (Keyboard.current.sKey.isPressed ? 1 : 0);
 
         moveInput = new Vector2(x, y).normalized;
+
     }
     private void UpdateAnimation()
     {
@@ -75,4 +82,20 @@ public class PlayerMovement : MonoBehaviour
         else if (moveInput.x > 0)
             spriteRenderer.flipX = false;
     }
+    private void HandleFootstepSFX()
+    {
+        if (isHidden || moveInput.sqrMagnitude < 0.01f)
+        {
+            footstepTimer = 0;
+            return;
+        }
+
+        footstepTimer -= Time.deltaTime;
+        if (footstepTimer <= 0)
+        {
+            AudioManager.Instance.PlaySFX(SFXType.Jalan);
+            footstepTimer = footstepInterval;
+        }
+    }
+
 }
