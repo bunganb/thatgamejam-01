@@ -6,7 +6,7 @@ public class FieldOfView2D : MonoBehaviour
     [Header("View Settings")]
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField, Range(1, 360)] private float fov = 90f;
-    [SerializeField] private float viewDistance = 8f;
+    [SerializeField] private float viewDistance = 4.5f;
     [SerializeField, Range(3, 300)] private int rayCount = 100;
 
     [Header("Origin (local offset)")]

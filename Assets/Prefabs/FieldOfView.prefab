@@ -58,7 +58,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   fov: 90
-  viewDistance: 6
+  viewDistance: 4.5
   rayCount: 100
   originOffset: {x: 0, y: 0.5, z: 1}
   sortingLayerName: Enemy
